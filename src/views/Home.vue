@@ -10,29 +10,10 @@
                     </p>
                 </div>
             </div>
-<!--            <div class="card mt-4">
-                <div class="card-body">
-                    <h5 class="card-title">Verbundene CKAN Instanz</h5>
-                    <p class="card-text">
-                        <a href="@homeView.ckanUrl" target="_blank">@homeView.ckanUrl</a>
-                    </p>
-                </div>
-            </div>
--->            <div class="card mt-4">
-                <div class="card-body">
-                    <h5 class="card-title">Connector-Selbstauskunft</h5>
-                    <p class="card-text">
-                        <router-link to="/about" type="button" class="btn btn-success">Turtle (txt)</router-link>
-                        <router-link to="/about.ttl" type="button" class="btn btn-success">Turtle</router-link>
-                        <router-link to="/about.jsonld" type="button" class="btn btn-success">JSON-LD</router-link>
-                        <router-link to="/about.rdf" type="button" class="btn btn-success">RDF-XML</router-link>
 
-                    </p>
-                </div>
-            </div>
 
-        </div>
-        <div class="col-lg-4">
+          </div>
+          <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Statistik</h5>
@@ -46,7 +27,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Aktionen</h5>
                     <p class="card-text">
-                        <router-link to="/dataasset/create" type="button" class="btn btn-info">Data Assets hinzufügen</router-link>
+                        <router-link to="/dataasset/create" type="button" class="btn btn-info">Data Assets hinzufügen</router-link> <br />
                         <router-link to="/dataasset" type="button" class="btn btn-info mt-2">Data Assets</router-link>
                     </p>
                 </div>
@@ -68,6 +49,9 @@ export default {
             }
         };
   },
+  mounted(){
+      this.getDataAssetCounts()
+  },
   beforeDestroy(){
     this.$store.state.info = null;
   },
@@ -77,6 +61,14 @@ export default {
   methods:{
     getWindowLocation(){
       return window.location.href
+    },
+    getDataAssetCounts(){
+        this.$axios
+            .get('http://localhost:8090/dataassets/counts')
+            .then(response => {
+            this.counts.dacount = response.data.dacount;
+            this.counts.publishedcount = response.data.publishedcount;
+            })
     }
   }
 

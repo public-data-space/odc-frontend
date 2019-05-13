@@ -16,7 +16,7 @@
                         <router-link to="/dataasset" class="nav-link">Data Assets</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/dataasset/create" class="nav-link">Hinzufügen</router-link>
+                        <router-link to="/datasource/select" class="nav-link">Hinzufügen</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link to="/job" class="nav-link">Jobs</router-link>

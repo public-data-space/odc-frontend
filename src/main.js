@@ -6,6 +6,7 @@ Vue.config.productionTip = false
 
 import "@/assets/stylesheets/main.css"
 import "@/assets/stylesheets/darkly.bootstrap.css"
+
 import router from './router'
 import store from './store'
 

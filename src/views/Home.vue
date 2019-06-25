@@ -64,7 +64,7 @@ export default {
     },
     getDataAssetCounts(){
         this.$axios
-            .get('http://localhost:8090/dataassets/counts')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/counts')
             .then(response => {
             this.counts.dacount = response.data.dacount;
             this.counts.publishedcount = response.data.publishedcount;

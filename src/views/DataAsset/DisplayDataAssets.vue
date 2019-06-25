@@ -48,7 +48,7 @@
                 },
                 mounted (){
                     this.$axios
-                        .get('http://localhost:8090/dataassets/')
+                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/')
                         .then(response => {
                             this.dataassets = response.data;
                         })

@@ -88,17 +88,17 @@ export default {
     },
     mounted(){
         this.$axios
-            .get('http://localhost:8090/datasources/find/ckan')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/ckan')
             .then(response => {
                 this.ckan = response.data;
             })
         this.$axios
-            .get('http://localhost:8090/datasources/find/postgres')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/postgres')
             .then(response => {
                 this.postgres = response.data;
             })
         this.$axios
-            .get('http://localhost:8090/datasources/find/other')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/other')
             .then(response => {
                 this.other = response.data;
             })

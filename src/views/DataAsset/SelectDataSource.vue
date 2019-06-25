@@ -38,7 +38,7 @@ export default {
     methods:{
         addAction(){
             this.$axios
-            .get('http://localhost:8090/dataassets/add/'+this.id)
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/'+this.id)
             .then(response => {
                 this.$store.state.info = response.data;
             }) 

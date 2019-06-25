@@ -139,22 +139,19 @@ export default {
     },
     methods:{
         addAction(){
-            this.$axios
-            .post('http://localhost:8090/datasource/add/', {
-                body: {
-                    "datasourceName": this.datasourceName,
-                    "datasourceType": this.datasourceType,
-                    "datasourceUrl": this.datasourceUrl,
-                    "datasourcePort": this.datasourcePort,
-                    "databaseName": this.databaseName,
-                    "username":this.username,
-                    "password":this.password
+            this.$axios({
+                method: 'post',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add',
+                data: {
+                    datasourceName: this.datasourceName,
+                    datasourceType: this.datasourceType,
+                    datasourceUrl: this.datasourceUrl,
+                    datasourcePort: this.datasourcePort,
                 }
-            })
+                })
             .then(response => {
                 this.$store.state.info = response.data;
             }) 
-            this.$router.push("/job")
         },
         createPush(){
             this.$router.push("/datasource/create")

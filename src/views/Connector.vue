@@ -12,7 +12,7 @@ export default {
     },
     mounted (){
         this.$axios
-            .get('http://localhost:8090/about')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/about')
             .then(response => {
                 this.selfDescription = response.data;
             })

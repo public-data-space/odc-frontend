@@ -67,7 +67,7 @@ export default {
         },
         addAction(){
             this.$axios
-            .get('http://localhost:8090/dataassets/add/'+this.id)
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/'+this.id)
             .then(response => {
                 this.$store.state.info = response.data;
             }) 
@@ -75,7 +75,7 @@ export default {
         },
         postquery(){
             this.$axios
-            .post('http://localhost:8090/dataassets/add/', {
+            .post(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/', {
                 body: this.query
             })
             .then(response => {
@@ -85,7 +85,7 @@ export default {
         uploadFile(){
             let formData = new FormData()
             formData.append('file', this.file)
-            this.$axios.post( 'http://localhost:8090/dataassets/add/',
+            this.$axios.post( process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/',
                     formData,
                     {
                         headers: {

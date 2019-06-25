@@ -39,8 +39,7 @@
     </div>
 </template>
 
-
-        <script>
+    <script>
             export default {
                 name: "Jobs",
                 data() {
@@ -57,14 +56,14 @@
                 methods:{
                     findAll () {
                         this.$axios
-                        .get('http://localhost:8090/jobs/find/all')
+                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/jobs/find/all')
                         .then(response => {
                             this.jobs = response.data;
                             })
                     },
                     deleteAll (){
                         this.$axios
-                        .get('http://localhost:8090/jobs/delete/all')
+                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/jobs/delete/all')
                         .then(response => {
                             this.$store.state.info = response.data;
                         })

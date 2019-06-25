@@ -7,19 +7,13 @@
               <div class="col-xl">
                   <span v-if="this.$store.state.info !== null">
                           <span v-if="this.$store.state.info.status == 'success'">
-                                  <div class="alert alert-success" role="alert">
-                                          {{this.$store.state.info.text}}
-                                  </div>
+                                    {{toastr.success(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}
                               </span>
                               <span v-if="this.$store.state.info.status == 'info'">
-                                  <div class="alert alert-info" role="alert">
-                                          {{this.$store.state.info.text}}
-                                  </div>                      
+                                    {{toastr.info(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}                  
                               </span>
                               <span v-if="this.$store.state.info.status == 'error'">
-                                  <div class="alert alert-danger" role="alert">
-                                          {{this.$store.state.info.text}}
-                                  </div> 
+                                    {{toastr.error(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}
                               </span>
                   </span>
                   <router-view></router-view>
@@ -34,6 +28,8 @@
         <script src="@/assets/javascripts/main.js" type="text/javascript"></script>
 <script>
 import Header from '@/components/Header.vue'
+import toastr from 'toastr'
+import '../node_modules/toastr/build/toastr.css'
 
 export default {
   name: 'app',

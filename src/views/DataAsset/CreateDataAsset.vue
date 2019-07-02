@@ -2,7 +2,7 @@
     <div class="wrapper">   
         <sidebar></sidebar>
         <div class="col-8">
-            <div v-if="type==='CKAN'">
+            <div v-if="type===0">
                 <div class="form-group">
                 <label for="resourceID">Resource-ID</label>
                 <input type="text"
@@ -15,7 +15,7 @@
                     <small id="resourceIDHelp" class="form-text text-muted">Tipp: Die eindeutige ID der Resource aus CKAN</small>
                 </div>
             </div>
-            <div v-if="type==='PostgreSQL'">
+            <div v-if="type===1">
                 <div class="form-group">
                 <label for="query">SQL Query</label>
                 <textarea rows="4" cols="50"
@@ -27,7 +27,7 @@
                     v-model="query"/>
                 </div>
             </div>
-            <div v-if="type==='FileUpload'">
+            <div v-if="type===2">
                 <div class="form-group">
                 <label for="query">SQL Query</label>
                 <input type="file"
@@ -50,13 +50,35 @@ export default {
     components: {
         Sidebar
     },
-    props:['type'],
+    props:['sourceid'],
     data() {
         return {
             id:null,
             query:null,
-            file:null
+            file:null,
+            source:null,
+            type:null
         };
+    },
+    beforeDestroy(){
+        this.$store.state.info = null;
+    },
+    mounted(){
+        this.$axios
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.sourceid)
+            .then(response => {
+                this.source = response.data;
+                this.type = this.source.datasourcetype;
+            })
+    },
+    beforeRouteUpdate  (to, from, next) {
+        this.$axios
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.sourceid)
+            .then(response => {
+                this.source = response.data;
+                this.type = this.source.datasourcetype;
+            }) 
+        next()
     },
     beforeDestroy(){
         this.$store.state.info = null;
@@ -66,11 +88,15 @@ export default {
             this.file = this.$refs.file.files[0];
         },
         addAction(){
-            this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/'+this.id)
-            .then(response => {
-                this.$store.state.info = response.data;
-            }) 
+
+            this.$axios({
+                method: 'post',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/ckan',
+                data: {
+                    sourceId: this.sourceid,
+                    resourceId:this.id
+                }
+                })    
             this.$router.push("/job")
         },
         postquery(){

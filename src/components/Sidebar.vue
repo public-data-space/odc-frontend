@@ -1,24 +1,29 @@
 <template>
                 <nav id="sidebar">
                         <ul class="list-unstyled">
-                            <h5>Data Sources</h5>
+                            <li>
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Data Sources</h5>
+                                    </div>
+                                    <div class="col">
+                                         <router-link to="/datasource/create/"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                    </div>
+                                </div>
                             <li>
                                 <div class="row">
                                     <div class="col">
                                         CKAN
                                     </div>
-                                    <div class="col">
-                                         <router-link to="/datasource/create/CKAN"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
-                                    </div>
                                 </div>
                                 <span class="border-top my-2"></span>
                                 <div class="row" v-for="ckansource in ckan">
                                     <div class="col">
-                                        <a href="#">{{ckansource.name}}</a>
+                                      <router-link :to="'/dataasset/create/'+ckansource.id">{{ckansource.datasourcename}}</router-link>
                                     </div>
                                     <div class="col">
                                         <span>
-                                             <router-link :to="'/dataasset/edit/'+ckansource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                             <router-link :to="'/datasource/edit/'+ckansource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                         </span>
                                         <span>
                                              <button v-on:click="deleteAction(ckansource.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
@@ -29,9 +34,6 @@
                                 <div class="row">
                                     <div class="col">
                                         PostgreSQL
-                                    </div>
-                                    <div class="col">
-                                        <router-link to="/datasource/create/PostgreSQL"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                     </div>
                                 </div>
                                 <span class="border-top my-2"></span>
@@ -87,25 +89,33 @@ export default {
         };
     },
     mounted(){
+        this.getAvailableSources()
+    },
+    methods:{
+        deleteAction(id){
         this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/ckan')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/delete/'+id)
+            .then(response => {
+                this.$store.state.info = response.data;
+                this.getAvailableSources()
+            })
+        },
+        getAvailableSources(){
+        this.$axios
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/0')
             .then(response => {
                 this.ckan = response.data;
             })
         this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/postgres')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/1')
             .then(response => {
                 this.postgres = response.data;
             })
         this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/other')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/2')
             .then(response => {
                 this.other = response.data;
             })
-    },
-    methods:{
-        deleteAction(){
-
         }
     }
 }

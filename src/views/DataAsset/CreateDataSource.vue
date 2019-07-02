@@ -115,7 +115,7 @@ export default {
   components: {
     Sidebar
   },
-  props: ['type'],
+  props:['datasourceid'],
     data() {
         return {
             options: ["CKAN","PostgreSQL"],
@@ -125,28 +125,52 @@ export default {
             datasourcePort: null,
             databaseName: null,
             username:null,
-            password:null
+            password:null,
+            id:null
         };
     },
     mounted(){
-        console.log(this.type)
-        if(typeof this.type !== 'undefined'){
-            this.datasourceType = this.type
-        }
+        this.updateParams()
     },
     beforeDestroy(){
         this.$store.state.info = null;
     },
+    watch: {
+        '$route': 'updateParams'
+    },
     methods:{
+        updateParams(){
+            if(typeof this.type !== 'undefined'){
+                this.datasourceType = this.type
+            }
+            if(this.datasourceid !== 'undefined'){
+                this.id = this.datasourceid
+                this.$axios
+                .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.id)
+                .then(response => {
+                    this.datasourceName = response.data.datasourcename;
+                    this.datasourceType = response.data.datasourcetype == 0 ? "CKAN" : "PostgreSQL",
+                    this.datasourceUrl = response.data.datasourceurl,
+                    this.datasourcePort = response.data.datasourceport
+                })
+            }
+        },
         addAction(){
+            var urlString;
+            if(this.id !== 'undefined'){
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add'
+            }
+            else{
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/edit'
+            }
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add',
+                url: urlString,
                 data: {
-                    datasourceName: this.datasourceName,
-                    datasourceType: this.datasourceType,
-                    datasourceUrl: this.datasourceUrl,
-                    datasourcePort: this.datasourcePort,
+                    datasourcename: this.datasourceName,
+                    datasourcetype: this.datasourceType,
+                    datasourceurl: this.datasourceUrl,
+                    datasourceport: this.datasourcePort,
                 }
                 })
             .then(response => {

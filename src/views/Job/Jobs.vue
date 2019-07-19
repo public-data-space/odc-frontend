@@ -47,11 +47,8 @@
                     jobs: null
                     };
                 },
-                mounted (){
+                beforeMount (){
                     this.findAll()
-                },
-                beforeDestroy(){
-                    this.$store.state.info = null;
                 },
                 methods:{
                     findAll () {
@@ -61,16 +58,13 @@
                             this.jobs = response.data;
                             })
                     },
-                    deleteAll (){
+                    deleteAction (){
                         this.$axios
                         .get(process.env.VUE_APP_BACKEND_BASE_URL+'/jobs/delete/all')
                         .then(response => {
-                            this.$store.state.info = response.data;
+                            this.$store.dispatch('update',response.data)
+                            this.findAll()
                         })
-                    },
-                    deleteAction(){
-                        this.deleteAll()
-                        this.findAll()
                     }
                 }
             }

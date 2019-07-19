@@ -17,7 +17,7 @@
                                     </div>
                                 </div>
                                 <span class="border-top my-2"></span>
-                                <div class="row" v-for="ckansource in ckan">
+                                <div class="row" v-for="ckansource in ckan" v-bind:key="ckansource.id">
                                     <div class="col">
                                       <router-link :to="'/dataasset/create/'+ckansource.id">{{ckansource.datasourcename}}</router-link>
                                     </div>
@@ -50,7 +50,7 @@
                                         </span>
                                     </div>
                                     </div>
-                                <div class="row" v-for="postgressource in postgres">
+                                <div class="row" v-for="postgressource in postgres"  v-bind:key="postgressource.id">
                                     <div class="col">
                                         <a href="#">{{postgressource.name}}</a>
                                     </div>
@@ -68,7 +68,7 @@
                                         Others
                                     </div>
                                 </div>
-                                <div class="row" v-for="othersource in other">
+                                <div class="row" v-for="othersource in other"  v-bind:key="othersource.id">
                                     <div class="col">
                                         <a href="#">{{othersource.name}}</a>
                                     </div>
@@ -88,38 +88,32 @@ export default {
             other: null
         };
     },
-    mounted(){
+    created(){
         this.getAvailableSources()
+    },
+    watch: {
+        '$route': 'getAvailableSources'
     },
     methods:{
         deleteAction(id){
         this.$axios
             .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/delete/'+id)
             .then(response => {
-                this.$store.state.info = response.data;
+                this.$store.dispatch('update',response.data)
                 this.getAvailableSources()
             })
         },
         getAvailableSources(){
         this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/0')
+            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/findAll')
             .then(response => {
-                this.ckan = response.data;
-            })
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/1')
-            .then(response => {
-                this.postgres = response.data;
-            })
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/2')
-            .then(response => {
-                this.other = response.data;
+                this.ckan = response.data.CKAN
+                this.postgres = response.data.POSTGRES
+                this.other = response.data.OTHER
             })
         }
     }
 }
-
 
 </script>
 <style>

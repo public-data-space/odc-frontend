@@ -129,29 +129,23 @@ export default {
             id:null
         };
     },
-    mounted(){
+    beforeMount(){
         this.updateParams()
-    },
-    beforeDestroy(){
-        this.$store.state.info = null;
     },
     watch: {
         '$route': 'updateParams'
     },
     methods:{
         updateParams(){
-            if(typeof this.type !== 'undefined'){
-                this.datasourceType = this.type
-            }
-            if(this.datasourceid !== 'undefined'){
+            if(typeof this.datasourceid !== 'undefined'){
                 this.id = this.datasourceid
                 this.$axios
                 .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.id)
                 .then(response => {
                     this.datasourceName = response.data.datasourcename;
                     this.datasourceType = response.data.datasourcetype == 0 ? "CKAN" : "PostgreSQL",
-                    this.datasourceUrl = response.data.datasourceurl,
-                    this.datasourcePort = response.data.datasourceport
+                    this.datasourceUrl = JSON.parse(response.data.data).ckanApiUrl,
+                    this.datasourcePort = JSON.parse(response.data.data).ckanPort
                 })
             }
         },
@@ -169,16 +163,16 @@ export default {
                 data: {
                     datasourcename: this.datasourceName,
                     datasourcetype: this.datasourceType,
-                    datasourceurl: this.datasourceUrl,
-                    datasourceport: this.datasourcePort,
+                    data: {
+                        ckanApiUrl: this.datasourceUrl,
+                        ckanPort: this.datasourcePort
+                    }
                 }
                 })
             .then(response => {
-                this.$store.state.info = response.data;
+                this.$store.dispatch('update',response.data)
+                this.$router.push("/datasource/create")
             }) 
-        },
-        createPush(){
-            this.$router.push("/datasource/create")
         }
     }
 }

@@ -60,10 +60,7 @@ export default {
             type:null
         };
     },
-    beforeDestroy(){
-        this.$store.state.info = null;
-    },
-    mounted(){
+    beforeMount(){
         this.$axios
             .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.sourceid)
             .then(response => {
@@ -80,33 +77,24 @@ export default {
             }) 
         next()
     },
-    beforeDestroy(){
-        this.$store.state.info = null;
-    },
     methods:{
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
         addAction(){
-
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/ckan',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
-                    resourceId:this.id
+                    data:{"resourceId":this.id},
+                    datasourcetype:this.type
                 }
-                })    
-            this.$router.push("/job")
-        },
-        postquery(){
-            this.$axios
-            .post(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/', {
-                body: this.query
-            })
-            .then(response => {
-                this.$store.state.info = response.data;
-            }) 
+                })
+                .then(response => {
+                    this.$store.dispatch('update',response.data)
+                    this.$router.push("/job")}
+                    )
         },
         uploadFile(){
             let formData = new FormData()

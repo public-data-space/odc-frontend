@@ -4,78 +4,86 @@ import Home from './views/Home.vue'
 
 Vue.use(Router)
 
+const ifNotAuthenticated = (to, from, next) => {
+  if (localStorage.getItem('jwt') !== null) {
+    next()
+    return
+  }
+  next('/login')
+}
+
+const ifAuthenticated = (to, from, next) => {
+  if (localStorage.getItem('jwt') == null) {
+    next()
+    return
+  }
+  next('/')
+}
+
 export default new Router({
+
   routes: [
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+      beforeEnter: ifNotAuthenticated
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('./views/Auth/Login.vue'),
+      ifAuthenticated
     },
     {
       path: '/about',
       name: 'connector',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Connector.vue')
+      component: () => import('./views/Connector.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/about.:ext',
       name: 'connector',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Connector.vue')
+      component: () => import('./views/Connector.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/job',
       name: 'jobs',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Job/Jobs.vue')
+      component: () => import('./views/Job/Jobs.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/dataasset/',
       name: 'dataassets',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/DataAsset/DisplayDataAssets.vue')
+      component: () => import('./views/DataAsset/DisplayDataAssets.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/dataasset/create/:sourceid',
       name: 'createdataasset',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/DataAsset/CreateDataAsset.vue'),
-      props: true
+      component: () => import('./views/DataAsset/CreateDataAsset.vue'),
+      props: true,
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/datasource/select',
       name: 'selectdatasource',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/DataAsset/SelectDataSource.vue')
+      component: () => import('./views/DataAsset/SelectDataSource.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/datasource/create',
       name: 'createdatasource',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/DataAsset/CreateDataSource.vue')
+      component: () => import('./views/DataAsset/CreateDataSource.vue'),
+      beforeEnter: ifNotAuthenticated
     },
     {
       path: '/datasource/edit/:datasourceid',
       name: 'editdatasource',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/DataAsset/CreateDataSource.vue'),
-      props: true
+      component: () => import('./views/DataAsset/CreateDataSource.vue'),
+      props: true,
+      beforeEnter: ifNotAuthenticated
     }
   ]
 })

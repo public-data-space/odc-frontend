@@ -5,17 +5,6 @@
           <br />
           <div class="row">
               <div class="col-xl">
-                  <span v-if="this.$store.state.info !== null">
-                          <span v-if="this.$store.state.info.status == 'success'">
-                                    {{toastr.success(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}
-                              </span>
-                              <span v-if="this.$store.state.info.status == 'info'">
-                                    {{toastr.info(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}                  
-                              </span>
-                              <span v-if="this.$store.state.info.status == 'error'">
-                                    {{toastr.error(this.$store.state.info.text,'', {"positionClass": "toast-top-center","timeOut": "1500"})}}
-                              </span>
-                  </span>
                   <router-view></router-view>
               </div>
           </div>
@@ -28,8 +17,6 @@
         <script src="@/assets/javascripts/main.js" type="text/javascript"></script>
 <script>
 import Header from '@/components/Header.vue'
-import toastr from 'toastr'
-import '../node_modules/toastr/build/toastr.css'
 
 export default {
   name: 'app',
@@ -38,4 +25,3 @@ export default {
   }
 }
 </script>
-

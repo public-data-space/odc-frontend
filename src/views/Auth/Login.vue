@@ -2,7 +2,7 @@
     <div>
         <div class="text-center">
             <p>
-                <img src="../assets/images/ids-white.png" alt="Logo of Industrial data space" class="navbar-logo mx-auto" style="width: auto; height: 50px;">
+                <img src="../../assets/images/ids-white.png" alt="Logo of Industrial data space" class="navbar-logo mx-auto" style="width: auto; height: 50px;">
             </p>
         </div>
         <div class="card mx-auto" style="width: 30rem;">
@@ -20,29 +20,49 @@
                         id="password"
                         required v-model="password">
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button v-on:click="login()" class="btn btn-primary">Login</button>
                 </form>
             </div>
         </div>
-    <div>
+    </div>
 </template>
+
 <script>
 export default {
     name:"Login",
     data() {
         return {
-            id: null
+            id: null,
+            username:null,
+            password:null
         };
     },
     beforeDestroy(){
         this.$store.state.info = null;
     },
+    beforeRouteEnter(to, from, next){
+        if(localStorage.getItem('jwt') !== null){
+            localStorage.removeItem('jwt')
+        }
+        next()
+    },
     methods:{
-        login: function () {
-            const { username, password } = this
-            this.$store.dispatch(AUTH_REQUEST, { username, password }).then(() => {
-                this.$router.push('/')
-            })
+        login() {
+           this.$axios({
+                method: 'post',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/login',
+                data: {
+                    username: this.username,
+                    password: this.password
+                    }
+                })
+                .then( response => {
+                    if(response.status == 200) {
+                        localStorage.setItem('jwt',response.data)
+                        this.$router.push("/")
+                    }
+                }
+                )
         }
     }
 }

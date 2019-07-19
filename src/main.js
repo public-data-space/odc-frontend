@@ -10,6 +10,10 @@ import "@/assets/stylesheets/darkly.bootstrap.css"
 import router from './router'
 import store from './store'
 
+router.afterEach((to, from) => {
+  store.commit('delete');
+})
+
 new Vue({
   router,
   store,

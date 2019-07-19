@@ -26,12 +26,12 @@
                         </div>
                         <div class="card-footer text-muted">
                             <span v-if="dataAsset.status == 1">
-                                <a href="@controllers.routes.DataAssetController.publish(dataAsset.getId)" class="btn btn-success">Veröffentlichen</a>
+                                  <button v-on:click="publishAction(dataAsset.id)" class="btn btn-success">Veröffentlichen</button>
                             </span>
                             <span v-if="dataAsset.status == 2">
-                                <a href="@controllers.routes.DataAssetController.unPublish(dataAsset.getId)" class="btn btn-primary">Zurückhalten</a>
+                                 <button v-on:click="unpublishAction(dataAsset.id)" class="btn btn-primary">Zurückhalten</button>
                             </span>
-                            <a href="@controllers.routes.DataAssetController.delete(dataAsset.getId)" class="btn btn-danger">Löschen</a>
+                             <button v-on:click="deleteAction(dataAsset.id)" class="btn btn-danger">Löschen</button>
                         </div>
                     </div>
                 <br />
@@ -46,15 +46,45 @@
                         dataassets: null
                     };
                 },
-                mounted (){
-                    this.$axios
-                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/')
-                        .then(response => {
-                            this.dataassets = response.data;
-                        })
+                beforeMount (){
+                    this.setData()
                 },
-                beforeDestroy(){
-                    this.$store.state.info = null;
+                methods:{
+                    setData(){
+                        this.$axios
+                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/')
+                            .then(response => {
+                                this.dataassets = response.data;
+                            })
+                    },
+                    publishAction(id){
+                        this.$axios
+                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/publish')
+                            .then(response => {
+                                this.dataassets.find(da => da.id == id).status = 2
+                            })
+                    },
+                    unpublishAction(id){
+                        this.$axios
+                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/unpublish')
+                            .then(response => {
+                               this.dataassets.find(da => da.id == id).status = 1
+                            })
+                    },
+                    deleteAction(id){
+                        this.$axios
+                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/delete')
+                            .then(response => {
+                                console.log(response.data);
+                                
+                                this.$store.dispatch('update',response.data)
+                                this.setData()
+                            })
+
+                    },
+                    findById(elementId, changedId){
+
+                    }
                 }
             }
         </script>

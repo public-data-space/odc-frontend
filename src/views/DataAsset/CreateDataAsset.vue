@@ -14,18 +14,50 @@
                     v-model="id">
                     <small id="resourceIDHelp" class="form-text text-muted">Tipp: Die eindeutige ID der Resource aus CKAN</small>
                 </div>
+                <button v-on:click="addCKAN()" class="btn btn-primary">Data Asset hinzufügen</button>
             </div>
             <div v-if="type===1">
-                <div class="form-group">
-                <label for="query">SQL Query</label>
-                <textarea rows="4" cols="50"
-                    class="form-control"
-                    id="query"
-                    name="query"
-                    aria-describedby="query"
-                    placeholder="SELECT * FROM table_name;"
-                    v-model="query"/>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                        <label for="query">SQL Query</label>
+                        <textarea rows="4" cols="50"
+                            class="form-control"
+                            id="query"
+                            name="query"
+                            aria-describedby="query"
+                            placeholder="SELECT * FROM table_name;"
+                            v-model="database.query"/>
+                        </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="col-6">  
+                        <div class="form-group">   
+                            <label for="resourceID">Name</label>
+                            <input type="text"
+                                class="form-control"
+                                id="name"
+                                name="name"
+                                aria-describedby="nameHelp"
+                                placeholder="Data Asset Name"
+                                v-model="database.name">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="resourceID">Beschreibung</label>
+                            <input type="text"
+                                class="form-control"
+                                id="description"
+                                name="description"
+                                aria-describedby="descriptionHelp"
+                                placeholder="Beischreibung des Data Assets"
+                                v-model="database.description">    
+                        </div>
+                    </div>
+                </div>
+            <button v-on:click="addPOSTGRES()" class="btn btn-primary">Data Asset hinzufügen</button>
             </div>
             <div v-if="type===2">
                 <div class="form-group">
@@ -37,7 +69,6 @@
                     v-on:change="handleFileUpload()">
                 </div>
             </div>
-            <button v-on:click="addAction()" class="btn btn-primary">Data Asset hinzufügen</button>
         </div>
     </div>
 </template>
@@ -54,10 +85,15 @@ export default {
     data() {
         return {
             id:null,
-            query:null,
+            database : {
+                query:null,
+                name:null,
+                description:null
+            },
             file:null,
             source:null,
-            type:null
+            type:null,
+
         };
     },
     beforeMount(){
@@ -81,13 +117,28 @@ export default {
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
-        addAction(){
+        addCKAN(){
             this.$axios({
                 method: 'post',
                 url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data:{"resourceId":this.id},
+                    datasourcetype:this.type
+                }
+                })
+                .then(response => {
+                    this.$store.dispatch('update',response.data)
+                    this.$router.push("/job")}
+                    )
+        },
+        addPOSTGRES(){
+            this.$axios({
+                method: 'post',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
+                data: {
+                    sourceId: this.sourceid,
+                    data:this.database,
                     datasourcetype:this.type
                 }
                 })

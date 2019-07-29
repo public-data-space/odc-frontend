@@ -37,26 +37,13 @@
                                     </div>
                                 </div>
                                 <span class="border-top my-2"></span>
-                                <div class="row">
-                                                             <div class="col">
-                                        <a href="#">T</a>
-                                    </div>
-                                    <div class="col">
-                                        <span>
-                                              <router-link :to="'/dataasset/edit/1'"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
-                                        </span>
-                                        <span>
-                                            <button v-on:click="deleteAction()"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
-                                        </span>
-                                    </div>
-                                    </div>
                                 <div class="row" v-for="postgressource in postgres"  v-bind:key="postgressource.id">
                                     <div class="col">
-                                        <a href="#">{{postgressource.name}}</a>
+                                         <router-link :to="'/dataasset/create/'+postgressource.id">{{postgressource.datasourcename}}</router-link>
                                     </div>
                                     <div class="col">
                                         <span>
-                                              <router-link :to="'/dataasset/edit/'+postgressource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                              <router-link :to="'/datasource/edit/'+postgressource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                         </span>
                                         <span>
                                             <button v-on:click="deleteAction(postgressource.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
@@ -108,7 +95,7 @@ export default {
             .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/findAll')
             .then(response => {
                 this.ckan = response.data.CKAN
-                this.postgres = response.data.POSTGRES
+                this.postgres = response.data.POSTGRESQL
                 this.other = response.data.OTHER
             })
         }

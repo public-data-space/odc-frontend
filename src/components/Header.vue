@@ -28,7 +28,14 @@
                         <router-link to="/login" class="nav-link">Logout</router-link>
                     </li>
                 </ul>
-
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.fokus.fraunhofer.de/imprint">Imprint</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.fokus.fraunhofer.de/data_protection">Data Protection</a>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>

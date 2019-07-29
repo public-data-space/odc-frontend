@@ -55,7 +55,11 @@
                 </div>
             </div>
             <div v-if="datasourceType==='CKAN'">
-                
+                <div class="row">
+                    <div class="col">
+                        <button v-on:click="addCKAN" class="btn btn-info">Data Source hinzufügen</button>
+                    </div>
+                </div>    
             </div>
             <div v-else>
                 <div class="row">
@@ -97,10 +101,10 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <button v-on:click="addAction" class="btn btn-info">Data Source hinzufügen</button>
+                <div class="row">
+                    <div class="col">
+                        <button v-on:click="addPOSTGRES" class="btn btn-info">Data Source hinzufügen</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -118,7 +122,7 @@ export default {
   props:['datasourceid'],
     data() {
         return {
-            options: ["CKAN","PostgreSQL"],
+            options: ["CKAN","POSTGRESQL"],
             datasourceName: null,
             datasourceType: "CKAN",
             datasourceUrl: null,
@@ -143,13 +147,23 @@ export default {
                 .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.id)
                 .then(response => {
                     this.datasourceName = response.data.datasourcename;
-                    this.datasourceType = response.data.datasourcetype == 0 ? "CKAN" : "PostgreSQL",
-                    this.datasourceUrl = JSON.parse(response.data.data).ckanApiUrl,
-                    this.datasourcePort = JSON.parse(response.data.data).ckanPort
+                    if(response.data.datasourcetype == 0){
+                        this.datasourceType = "CKAN",
+                        this.datasourceUrl = JSON.parse(response.data.data).ckanApiUrl,
+                        this.datasourcePort = JSON.parse(response.data.data).ckanPort
+                    }
+                    else{
+                        this.datasourceType =  "POSTGRESQL",
+                        this.databaseName = JSON.parse(response.data.data).databaseName,
+                        this.datasourceUrl = JSON.parse(response.data.data).databaseUrl,
+                        this.datasourcePort = JSON.parse(response.data.data).databasePort,
+                        this.username = JSON.parse(response.data.data).username,
+                        this.password = JSON.parse(response.data.data).password
+                    }
                 })
             }
         },
-        addAction(){
+        addCKAN(){
             var urlString;
             if(this.id !== 'undefined'){
                 urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add'
@@ -166,6 +180,34 @@ export default {
                     data: {
                         ckanApiUrl: this.datasourceUrl,
                         ckanPort: this.datasourcePort
+                    }
+                }
+                })
+            .then(response => {
+                this.$store.dispatch('update',response.data)
+                this.$router.push("/datasource/create")
+            }) 
+        },
+         addPOSTGRES(){
+            var urlString;
+            if(this.id !== 'undefined'){
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add'
+            }
+            else{
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/edit'
+            }
+            this.$axios({
+                method: 'post',
+                url: urlString,
+                data: {
+                    datasourcename: this.datasourceName,
+                    datasourcetype: this.datasourceType,
+                    data: {
+                        databaseUrl: this.datasourceUrl,
+                        databasePort: this.datasourcePort,
+                        databaseName: this.databaseName,
+                        username: this.username,
+                        password: this.password,
                     }
                 }
                 })

@@ -14,14 +14,14 @@
                                 </p>
                                 <h5>Resourcen</h5>
                                 <p>
-                                <a href="../Job/index.html" class=" badge badge-info">Download Rohdaten</a>
+                                <a :href="'http://localhost:8090/data/'+dataAsset.id" class=" badge badge-info">Download Rohdaten</a>
                             <!--  <a href="@urlService.getOriginalResourceURL(dataAsset)" target="_blank" class="badge badge-info">Zur Quelle</a>-->
                                 </p>
                                 <h5>IDS Download</h5>
                                  <p>
-                                <a :href="'http://localhost:8080/payload/'+dataAsset.id" class="badge badge-success">IDS</a>
-                                <a :href="'http://localhost:8080/payload/'+dataAsset.id+'.txt'" class="badge badge-primary">IDS+TXT</a>
-                                <a :href="'http://localhost:8080/payload/'+dataAsset.id+'.json'" class="badge badge-primary">IDS+JSON</a>
+                                <a :href="'http://localhost:8090/data/'+dataAsset.id" class="badge badge-success">IDS</a>
+                                <a :href="'http://localhost:8090/data/'+dataAsset.id+'.txt'" class="badge badge-primary">IDS+TXT</a>
+                                <a :href="'http://localhost:8090/data/'+dataAsset.id+'.json'" class="badge badge-primary">IDS+JSON</a>
                                 </p>
                         </div>
                         <div class="card-footer text-muted">
@@ -51,36 +51,76 @@
                 },
                 methods:{
                     setData(){
-                        this.$axios
-                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/')
-                            .then(response => {
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response => {
                                 this.dataassets = response.data;
                             })
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")                            }
+                        })
                     },
                     publishAction(id){
-                        this.$axios
-                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/publish')
-                            .then(response => {
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/'+id+'/publish',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response => {
                                 this.dataassets.find(da => da.id == id).status = 2
                             })
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")
+                            }
+                        })
                     },
                     unpublishAction(id){
-                        this.$axios
-                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/unpublish')
-                            .then(response => {
-                               this.dataassets.find(da => da.id == id).status = 1
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/'+id+'/unpublish',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response => {
+                                this.dataassets.find(da => da.id == id).status = 1
                             })
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")
+                            }
+                        })
                     },
                     deleteAction(id){
-                        this.$axios
-                            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/'+id+'/delete')
-                            .then(response => {
-                                console.log(response.data);
-                                
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/'+id+'/delete',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response => {
                                 this.$store.dispatch('update',response.data)
-                                this.setData()
+                                this.setData() 
                             })
-
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")
+                            }
+                        })
                     },
                     findById(elementId, changedId){
 

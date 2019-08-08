@@ -52,9 +52,6 @@ export default {
   mounted(){
       this.getDataAssetCounts()
   },
-  beforeDestroy(){
-    this.$store.state.info = null;
-  },
   components: {
     
   },
@@ -63,14 +60,24 @@ export default {
       return window.location.href
     },
     getDataAssetCounts(){
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/counts')
-            .then(response => {
+        this.$axios({
+            method: 'get',
+            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/counts',
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+            }
+        })
+        .then(response => {
             this.counts.dacount = response.data.dacount;
             this.counts.publishedcount = response.data.publishedcount;
             })
+        .catch(error => {
+            if(error.response.status === 401){
+                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                this.$router.push("/login")                            
+            }
+         })
     }
   }
-
 }
 </script>

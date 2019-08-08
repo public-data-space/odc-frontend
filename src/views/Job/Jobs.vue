@@ -52,18 +52,40 @@
                 },
                 methods:{
                     findAll () {
-                        this.$axios
-                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/jobs/find/all')
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/jobs/find/all',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
                         .then(response => {
-                            this.jobs = response.data;
+                                this.jobs = response.data;
                             })
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")                            
+                            }
+                        })
                     },
                     deleteAction (){
-                        this.$axios
-                        .get(process.env.VUE_APP_BACKEND_BASE_URL+'/jobs/delete/all')
+                        this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/jobs/delete/all',
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
                         .then(response => {
                             this.$store.dispatch('update',response.data)
                             this.findAll()
+                            })
+                        .catch(error => {
+                            if(error.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")                            
+                            }
                         })
                     }
                 }

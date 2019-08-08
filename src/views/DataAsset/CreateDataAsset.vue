@@ -2,7 +2,7 @@
     <div class="wrapper">   
         <sidebar></sidebar>
         <div class="col-8">
-            <div v-if="type===0">
+            <div v-if="type==='CKAN'">
                 <div class="form-group">
                 <label for="resourceID">Resource-ID</label>
                 <input type="text"
@@ -16,7 +16,7 @@
                 </div>
                 <button v-on:click="addCKAN()" class="btn btn-primary">Data Asset hinzufügen</button>
             </div>
-            <div v-if="type===1">
+            <div v-if="type==='POSTGRESQL'">
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
@@ -41,7 +41,7 @@
                                 name="name"
                                 aria-describedby="nameHelp"
                                 placeholder="Data Asset Name"
-                                v-model="database.name">
+                                v-model="database.datasettitle">
                         </div>
                     </div>
                     <div class="col-6">
@@ -53,13 +53,13 @@
                                 name="description"
                                 aria-describedby="descriptionHelp"
                                 placeholder="Beischreibung des Data Assets"
-                                v-model="database.description">    
+                                v-model="database.datasetnotes">    
                         </div>
                     </div>
                 </div>
             <button v-on:click="addPOSTGRES()" class="btn btn-primary">Data Asset hinzufügen</button>
             </div>
-            <div v-if="type===2">
+            <div v-if="type==='OTHER'">
                 <div class="form-group">
                 <label for="query">SQL Query</label>
                 <input type="file"
@@ -87,8 +87,8 @@ export default {
             id:null,
             database : {
                 query:null,
-                name:null,
-                description:null
+                datasettitle:null,
+                datasetnotes:null
             },
             file:null,
             source:null,
@@ -97,21 +97,43 @@ export default {
         };
     },
     beforeMount(){
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.sourceid)
-            .then(response => {
-                this.source = response.data;
-                this.type = this.source.datasourcetype;
-            })
+        this.$axios({
+            method: 'get',
+            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.sourceid,
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+            }
+        })
+        .then(response => {
+            this.source = response.data;
+            this.type = this.source.datasourcetype;
+        })
+        .catch(error => {
+            if(error.response.status === 401){
+                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                this.$router.push("/login")                            
+            }
+        })
     },
     beforeRouteUpdate  (to, from, next) {
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.sourceid)
-            .then(response => {
-                this.source = response.data;
-                this.type = this.source.datasourcetype;
-            }) 
-        next()
+        this.$axios({
+            method: 'get',
+            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.sourceid,
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+            }
+        })
+        .then(response => {
+            this.source = response.data;
+            this.type = this.source.datasourcetype;
+            next()
+        })
+        .catch(error => {
+            if(error.response.status === 401){
+                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                this.$router.push("/login")                            
+            }
+        })
     },
     methods:{
         handleFileUpload(){
@@ -120,17 +142,26 @@ export default {
         addCKAN(){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data:{"resourceId":this.id},
                     datasourcetype:this.type
+                },
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
-                })
-                .then(response => {
-                    this.$store.dispatch('update',response.data)
-                    this.$router.push("/job")}
-                    )
+            })
+            .then(response => {
+                this.$store.dispatch('update',response.data)
+                this.$router.push("/job")
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
         },
         addPOSTGRES(){
             this.$axios({
@@ -140,26 +171,43 @@ export default {
                     sourceId: this.sourceid,
                     data:this.database,
                     datasourcetype:this.type
+                },
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
-                })
-                .then(response => {
-                    this.$store.dispatch('update',response.data)
-                    this.$router.push("/job")}
-                    )
+            })
+            .then(response => {
+                this.$store.dispatch('update',response.data)
+                this.$router.push("/job")}
+            )
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
         },
         uploadFile(){
             let formData = new FormData()
             formData.append('file', this.file)
-            this.$axios.post( process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/',
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }
-                    ).then(function(){
-                        this.$store.state.info = response.data;
-                    })
+            this.$axios({
+                method: 'post',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
+                data: formData,
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt'),
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                this.$store.state.info = response.data;
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
         }
     }
 }

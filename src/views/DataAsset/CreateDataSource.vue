@@ -39,7 +39,7 @@
                         id="datasourceUrl"
                         name="datasourceUrl"
                         placeholder="http://localhost"
-                        v-model="datasourceUrl">
+                        v-model="host">
                     </div>
                 </div>
                 <div class="col-3">
@@ -50,7 +50,7 @@
                         id="datasourcePort"
                         name="datasourcePort"
                         placeholder="80"
-                        v-model="datasourcePort">
+                        v-model="port">
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                             id="databaseName"
                             name="databaseName"
                             placeholder=""
-                            v-model="databaseName">
+                            v-model="database">
                         </div>
                     </div>
                 </div>
@@ -125,12 +125,12 @@ export default {
             options: ["CKAN","POSTGRESQL"],
             datasourceName: null,
             datasourceType: "CKAN",
-            datasourceUrl: null,
-            datasourcePort: null,
-            databaseName: null,
-            username:null,
-            password:null,
-            id:null
+            host: null,
+            port: null,
+            database: null,
+            username: null,
+            password: null,
+            id: null
         };
     },
     beforeMount(){
@@ -143,33 +143,43 @@ export default {
         updateParams(){
             if(typeof this.datasourceid !== 'undefined'){
                 this.id = this.datasourceid
-                this.$axios
-                .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/find/id/'+this.id)
+                this.$axios({
+                    method: 'get',
+                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
+                    headers: {
+                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                })
                 .then(response => {
                     this.datasourceName = response.data.datasourcename;
-                    if(response.data.datasourcetype == 0){
+                    if(response.data.datasourcetype == 'CKAN'){
                         this.datasourceType = "CKAN",
-                        this.datasourceUrl = JSON.parse(response.data.data).ckanApiUrl,
-                        this.datasourcePort = JSON.parse(response.data.data).ckanPort
+                        this.host = JSON.parse(response.data.data).ckanApiUrl,
+                        this.port = JSON.parse(response.data.data).ckanPort
                     }
                     else{
                         this.datasourceType =  "POSTGRESQL",
-                        this.databaseName = JSON.parse(response.data.data).databaseName,
-                        this.datasourceUrl = JSON.parse(response.data.data).databaseUrl,
-                        this.datasourcePort = JSON.parse(response.data.data).databasePort,
+                        this.database = JSON.parse(response.data.data).database,
+                        this.host = JSON.parse(response.data.data).host,
+                        this.port = JSON.parse(response.data.data).port,
                         this.username = JSON.parse(response.data.data).username,
                         this.password = JSON.parse(response.data.data).password
                     }
+                })
+                .catch(error => {
+                    if(error.response.status === 401){
+                        this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                        this.$router.push("/login")                            }
                 })
             }
         },
         addCKAN(){
             var urlString;
             if(this.id !== 'undefined'){
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add'
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/add'
             }
             else{
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/edit'
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit'
             }
             this.$axios({
                 method: 'post',
@@ -178,23 +188,32 @@ export default {
                     datasourcename: this.datasourceName,
                     datasourcetype: this.datasourceType,
                     data: {
-                        ckanApiUrl: this.datasourceUrl,
-                        ckanPort: this.datasourcePort
+                        ckanApiUrl: this.host,
+                        ckanPort: this.port
                     }
+                },
+                headers: {
+                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
-                })
+            })
             .then(response => {
                 this.$store.dispatch('update',response.data)
                 this.$router.push("/datasource/create")
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
             }) 
         },
          addPOSTGRES(){
             var urlString;
             if(this.id !== 'undefined'){
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/add'
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/add'
             }
             else{
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/edit'
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit'
             }
             this.$axios({
                 method: 'post',
@@ -203,17 +222,23 @@ export default {
                     datasourcename: this.datasourceName,
                     datasourcetype: this.datasourceType,
                     data: {
-                        databaseUrl: this.datasourceUrl,
-                        databasePort: this.datasourcePort,
-                        databaseName: this.databaseName,
+                        host: this.host,
+                        port: parseInt(this.port),
+                        database: this.database,
                         username: this.username,
-                        password: this.password,
+                        password: this.password
                     }
                 }
                 })
             .then(response => {
                 this.$store.dispatch('update',response.data)
                 this.$router.push("/datasource/create")
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
             }) 
         }
     }

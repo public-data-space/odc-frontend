@@ -83,20 +83,42 @@ export default {
     },
     methods:{
         deleteAction(id){
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/delete/'+id)
+         this.$axios({
+                method: 'get',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                }
+            })
             .then(response => {
                 this.$store.dispatch('update',response.data)
                 this.getAvailableSources()
             })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
         },
         getAvailableSources(){
-        this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/datasources/findAll')
+            this.$axios({
+                method: 'get',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/findAll',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                }
+            })
             .then(response => {
                 this.ckan = response.data.CKAN
                 this.postgres = response.data.POSTGRESQL
                 this.other = response.data.OTHER
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
             })
         }
     }

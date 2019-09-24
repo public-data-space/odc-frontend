@@ -228,8 +228,11 @@ export default {
                         username: this.username,
                         password: this.password
                     }
+                },
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
-                })
+            })
             .then(response => {
                 this.$store.dispatch('update',response.data)
                 this.$router.push("/datasource/create")

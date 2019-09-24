@@ -166,7 +166,7 @@ export default {
         addPOSTGRES(){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data:this.database,
@@ -192,7 +192,7 @@ export default {
             formData.append('file', this.file)
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/add',
                 data: formData,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt'),

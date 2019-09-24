@@ -25,6 +25,9 @@
                        <router-link to="/about" class="nav-link">Connector</router-link>
                     </li>
                     <li class="nav-item">
+                       <router-link to="/apps" class="nav-link">Apps</router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/login" class="nav-link">Logout</router-link>
                     </li>
                 </ul>

@@ -84,6 +84,12 @@ export default new Router({
       component: () => import('./views/DataAsset/CreateDataSource.vue'),
       props: true,
       beforeEnter: ifNotAuthenticated
+    },
+    {
+      path: '/apps',
+      name: 'apps',
+      component: () => import('./views/Apps/AppMenu.vue'),
+      beforeEnter: ifNotAuthenticated
     }
   ]
 })

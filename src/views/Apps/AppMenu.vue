@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
-        <ul class="list-group">
-            <li v-for="app in images" class="list-group-item" v-bind:class="{ disabled: app.containerIds.length==0}">
+        <ul class="list-group" style="width: 1098px;height: 36px;">
+            <li v-for="app in images" class="list-group-item" v-bind:key=app.id v-bind:class="{ disabled: app.containerIds.length==0}">
                 <div class="row">
                     <div class="col-10">
                     {{app.name}}
@@ -17,7 +17,6 @@
         </ul>   
     </div>
 </template>
-
             
 <script>
 export default {
@@ -62,7 +61,7 @@ export default {
             })
             .then(response => {
                 this.$store.dispatch('update',response.data)
-                updateParams()
+                this.updateParams()
             })
             .catch(error => {
                 if(error.response.status === 401){
@@ -82,6 +81,7 @@ export default {
             })
             .then(response => {
                 this.$store.dispatch('update',response.data)
+                this.updateParams()
             })
             .catch(error => {
                 if(error.response.status === 401){

@@ -70,17 +70,12 @@ export default new Router({
       path: '/datasource/select',
       name: 'selectdatasource',
       component: () => import('./views/DataAsset/SelectDataSource.vue'),
+      props: true,
       beforeEnter: ifNotAuthenticated
     },
     {
       path: '/datasource/create',
       name: 'createdatasource',
-      component: () => import('./views/DataAsset/CreateDataSource.vue'),
-      beforeEnter: ifNotAuthenticated
-    },
-    {
-      path: '/datasource/edit/:datasourceid',
-      name: 'editdatasource',
       component: () => import('./views/DataAsset/CreateDataSource.vue'),
       props: true,
       beforeEnter: ifNotAuthenticated

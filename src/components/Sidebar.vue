@@ -7,59 +7,31 @@
                                         <h5>Data Sources</h5>
                                     </div>
                                     <div class="col">
-                                         <router-link to="/datasource/create/"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                         <router-link :to="{name: 'createdatasource', params: {sources: this.sources}}"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                     </div>
                                 </div>
                             <li>
-                                <div class="row">
-                                    <div class="col">
-                                        CKAN
+                                <span v-for="sourceList in this.sources" v-bind:key="sourceList.type">
+                                    <div class="row">
+                                        <div class="col">
+                                            {{sourceList.type}}
+                                        </div>
                                     </div>
-                                </div>
-                                <span class="border-top my-2"></span>
-                                <div class="row" v-for="ckansource in ckan" v-bind:key="ckansource.id">
-                                    <div class="col">
-                                      <router-link :to="'/dataasset/create/'+ckansource.id">{{ckansource.datasourcename}}</router-link>
+                                    <span class="border-top my-2"></span>
+                                    <div class="row" v-for="source in sourceList.sources" v-bind:key="source.id">
+                                        <div class="col">
+                                        <router-link :to="{name: 'createdataasset', params: {sources: sources, sourceid: source.id}}">{{source.datasourcename}}</router-link>
+                                        </div>
+                                        <div class="col">
+                                            <span>
+                                                <router-link :to="{name: 'createdatasource', params: {sources: sources, sourceid: source.id}}"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                            </span>
+                                            <span>
+                                                <button v-on:click="deleteAction(source.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <span>
-                                             <router-link :to="'/datasource/edit/'+ckansource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
-                                        </span>
-                                        <span>
-                                             <button v-on:click="deleteAction(ckansource.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col">
-                                        PostgreSQL
-                                    </div>
-                                </div>
-                                <span class="border-top my-2"></span>
-                                <div class="row" v-for="postgressource in postgres"  v-bind:key="postgressource.id">
-                                    <div class="col">
-                                         <router-link :to="'/dataasset/create/'+postgressource.id">{{postgressource.datasourcename}}</router-link>
-                                    </div>
-                                    <div class="col">
-                                        <span>
-                                              <router-link :to="'/datasource/edit/'+postgressource.id"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
-                                        </span>
-                                        <span>
-                                            <button v-on:click="deleteAction(postgressource.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        Others
-                                    </div>
-                                </div>
-                                <div class="row" v-for="othersource in other"  v-bind:key="othersource.id">
-                                    <div class="col">
-                                        <a href="#">{{othersource.name}}</a>
-                                    </div>
-                                </div>
+                                </span>
                             </li>
                         </ul>
                 </nav>
@@ -68,18 +40,10 @@
 <script>
 export default {
     name:"Sidebar",
+    props:['sources'],
     data() {
         return {
-            ckan: null,
-            postgres: null,
-            other: null
         };
-    },
-    created(){
-        this.getAvailableSources()
-    },
-    watch: {
-        '$route': 'getAvailableSources'
     },
     methods:{
         deleteAction(id){
@@ -92,27 +56,6 @@ export default {
             })
             .then(response => {
                 this.$store.dispatch('update',response.data)
-                this.getAvailableSources()
-            })
-            .catch(error => {
-                if(error.response.status === 401){
-                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                    this.$router.push("/login")                            
-                }
-            })
-        },
-        getAvailableSources(){
-            this.$axios({
-                method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/findAll',
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
-                }
-            })
-            .then(response => {
-                this.ckan = response.data.CKAN
-                this.postgres = response.data.POSTGRESQL
-                this.other = response.data.OTHER
             })
             .catch(error => {
                 if(error.response.status === 401){
@@ -123,7 +66,6 @@ export default {
         }
     }
 }
-
 </script>
 <style>
 .wrapper {

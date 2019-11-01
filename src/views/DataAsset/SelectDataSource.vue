@@ -1,11 +1,7 @@
 <template>
     <div>
-        <div v-if="datasources !== null">
-            <button v-on:click="createPush()" type="button" class="btn btn-info btn-lg btn-block">Data Source hinzufügen</button>
-        </div>
-        <div v-else>
             <div class="wrapper">
-                <sidebar></sidebar>
+                <sidebar v-bind:sources="this.sources"></sidebar>
                 <div id=content>
                     <div class="card">
                         <div class="card-body">
@@ -17,35 +13,71 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
+
 import Sidebar from '@/components/Sidebar.vue'
 export default {
-  name: 'createdatasource',
+  name: 'selectdatasource',
   components: {
     Sidebar
   },
     data() {
         return {
-            datasources: null
+            sources:[]
         };
+    },
+    beforeMount(){
+        this.querySources()
     },
     beforeDestroy(){
         this.$store.state.info = null;
     },
+    watch:{
+    '$route': 'querySources'
+    },
     methods:{
-        addAction(){
-            this.$axios
-            .get(process.env.VUE_APP_BACKEND_BASE_URL+'/dataassets/add/'+this.id)
-            .then(response => {
-                this.$store.state.info = response.data;
-            }) 
-            this.$router.push("/job")
-        },
-        createPush(){
-            this.$router.push("/datasource/create")
+        querySources(){
+                this.$axios({
+                    method: 'get',
+                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    headers: {
+                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                })
+                .then(response => {
+                    for( var i in response.data ){
+                        var adapter = response.data[i]
+                        console.log(adapter.name)
+                         this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response2 => {
+                            this.sources.push({
+                                type: response2.data.type,
+                                sources: response2.data.result
+                            })
+                        })
+                        .catch(error2 => {
+                            console.log(error2.response)
+                            if(error2.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")                            
+                            }
+                        })    
+                    }
+                   })
+                .catch(error => {
+                    if(error.response.status === 401){
+                        this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                        this.$router.push("/login")                            
+                    }
+                })
         }
     }
 }

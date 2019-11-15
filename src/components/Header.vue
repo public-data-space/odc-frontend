@@ -28,6 +28,12 @@
                        <router-link to="/apps" class="nav-link">Apps</router-link>
                     </li>
                     <li class="nav-item">
+                       <router-link to="/brokers" class="nav-link">Brokers</router-link>
+                    </li>
+                    <li class="nav-item">
+                       <router-link to="/configuration" class="nav-link">Konfiguration</router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/login" class="nav-link">Logout</router-link>
                     </li>
                 </ul>

@@ -49,7 +49,6 @@ export default {
                 .then(response => {
                     for( var i in response.data ){
                         var adapter = response.data[i]
-                        console.log(adapter.name)
                          this.$axios({
                             method: 'get',
                             url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
@@ -64,7 +63,6 @@ export default {
                             })
                         })
                         .catch(error2 => {
-                            console.log(error2.response)
                             if(error2.response.status === 401){
                                 this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
                                 this.$router.push("/login")                            

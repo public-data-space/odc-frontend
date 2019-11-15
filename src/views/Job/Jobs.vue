@@ -10,7 +10,7 @@
                 </tr>
             </thead>
             <tbody>
-                    <tr v-for="job in jobs">
+                    <tr v-for="job in jobs" v-bind:key="job.id">
                         <th scope="row">{{job.id}}</th>
                         <td>{{job.resourceid}}</td>
                         <td>{{new Date(Date.parse(job.created_at)).toLocaleString()}}</td>

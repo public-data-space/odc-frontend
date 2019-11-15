@@ -82,11 +82,9 @@ export default {
                     }
                 })
                 .then(response => {
-                    console.log(response.data)
                     this.formSchema = response.data
                 })
                 .catch(error => {
-                    console.log(error)
                     if(error.response.status === 401){
                         this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
                         this.$router.push("/login")                            
@@ -106,14 +104,14 @@ export default {
                 .then(response => {
                     this.type=response.data.source.datasourcetype
                     this.getFormSchema().then(() => {
-                        console.log(this.formSchema)
                     })
                     
                 })
                 .catch(error => {
                     if(error.response.status === 401){
                         this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                        this.$router.push("/login")                            }
+                        this.$router.push("/login")                            
+                    }
                 })
             }
         },

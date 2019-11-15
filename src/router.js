@@ -85,6 +85,18 @@ export default new Router({
       name: 'apps',
       component: () => import('./views/Apps/AppMenu.vue'),
       beforeEnter: ifNotAuthenticated
+    },
+    {
+      path: '/brokers',
+      name: 'brokers',
+      component: () => import('./views/Brokers/Brokers.vue'),
+      beforeEnter: ifNotAuthenticated
+    },
+    {
+      path: '/configuration',
+      name: 'configuration',
+      component: () => import('./views/Configuration/Configuration.vue'),
+      beforeEnter: ifNotAuthenticated
     }
   ]
 })

@@ -1,6 +1,6 @@
 <template>
     <div>
-            <span v-for="dataAsset in dataassets">
+            <span v-for="dataAsset in dataassets" v-bind:key="dataAsset.id">
                     <div class="card">
                         <div class="card-header">
                             <h4>{{dataAsset.datasettitle}}</h4>
@@ -121,9 +121,6 @@
                                 this.$router.push("/login")
                             }
                         })
-                    },
-                    findById(elementId, changedId){
-
                     }
                 }
             }

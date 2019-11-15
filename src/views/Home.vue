@@ -8,6 +8,10 @@
                         Der Open Data Connector ermöglicht die einfache Bereitstellung von Open Data unter den Spezifikationen
                         des Industrial Data Spaces. Die Daten liegen dabei ursprünglich in der Open Source Datenmanagementsoftware CKAN vor.
                     </p>
+                    <p>
+                         Bitte aktualisieren Sie im ersten Schritt. Die Konfiguration des Konnektors.
+                    </p>
+                    <router-link to="/configuration" type="button" class="btn btn-info mt-2">Konfiguration aktualisieren</router-link>
                 </div>
             </div>
 
@@ -25,10 +29,20 @@
             </div>
             <div class="card mt-4">
                 <div class="card-body">
-                    <h5 class="card-title">Aktionen</h5>
+                    <h5 class="card-title">Konfiguration</h5>
                     <p class="card-text">
-                        <router-link to="/dataasset/create" type="button" class="btn btn-info">Data Assets hinzufügen</router-link> <br />
-                        <router-link to="/dataasset" type="button" class="btn btn-info mt-2">Data Assets</router-link>
+                        <router-link to="/configuration" type="button" class="btn btn-info">Konfiguration ändern</router-link> <br />
+                        <router-link to="/apps" type="button" class="btn btn-info mt-2">Apps verwalten</router-link> <br />
+                        <router-link to="/brokers" type="button" class="btn btn-info mt-2">Broker verwalten</router-link>
+                    </p>
+                </div>
+            </div>
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title">Data Assets verwalten</h5>
+                    <p class="card-text">
+                        <router-link to="/datasource/select" type="button" class="btn btn-info">Data Source hinzufügen</router-link> <br />
+                        <router-link to="/dataasset" type="button" class="btn btn-info mt-2">Data Assets anzeigen</router-link>
                     </p>
                 </div>
             </div>

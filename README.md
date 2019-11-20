@@ -1,29 +1,8 @@
-# frontend
+# IDS Open Data Connector Manager
 
-## Project setup
-```
-npm install
-```
+This repository contains the logic of the Open Data Connector's core component. It provides REST endpoints and manages metadata 
+about data sources, data assets, brokers and the IDS Information model.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+The main repository of the IDS Open Data Connector is: 
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+ids-open-data-connector

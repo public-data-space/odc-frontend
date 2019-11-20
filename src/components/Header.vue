@@ -22,7 +22,7 @@
                         <router-link to="/job" class="nav-link">Jobs</router-link>
                     </li>
                     <li class="nav-item">
-                       <router-link to="/about" class="nav-link">Connector</router-link>
+                        <a class="nav-link" href="http://localhost:8090/about/json">Connector</a>
                     </li>
                     <li class="nav-item">
                        <router-link to="/apps" class="nav-link">Apps</router-link>

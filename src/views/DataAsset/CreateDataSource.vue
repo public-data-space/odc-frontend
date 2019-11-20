@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">   
-        <sidebar v-bind:sources=this.sources></sidebar>
+        <sidebar v-bind:sources=this.sources v-on:delete="deleteAction"></sidebar>
         <div id=content>
             <div class="row">
                 <div class="col">
@@ -22,11 +22,11 @@
                         name="datasourceType"
                         v-model="type"
                         :required="true">
-                        <option v-for="option in options" 
-                        v-bind:key=option.name
-                        v-bind:value="option"
-                        :selected="option === type"    
-                        >{{ option }}</option>
+                        <option v-for="option in sources" 
+                        v-bind:key=option.type
+                        v-bind:value="option.type"
+                        :selected="option.type === type"    
+                        >{{ option.type }}</option>
                         </select>
                     </div>
                 </div>
@@ -49,27 +49,27 @@ export default {
   components: {
     Sidebar
   },
-  props:['sources', 'sourceid'],
+  props:['sourceid'],
     data() {
         return {
-            options: [],
             type: "",
             name: null,
             id: null,
-            formSchema: {}
+            formSchema: {},
+            sources: []
         };
     },
     beforeMount(){
-        for (var source in this.sources){
-            this.options.push(this.sources[source].type)
-        }
-        this.type = this.sources[0].type
-        this.updateParams()
+        this.querySources()
     },
     watch: {
         '$route': 'updateParams',
-        type: function(val) {
+        type: function() {
             this.getFormSchema()
+        },
+        sources: function() {
+            this.type = this.sources[0].type
+            this.updateParams()
         }
     },
     methods:{
@@ -103,8 +103,7 @@ export default {
                 })
                 .then(response => {
                     this.type=response.data.source.datasourcetype
-                    this.getFormSchema().then(() => {
-                    })
+                    this.getFormSchema()
                     
                 })
                 .catch(error => {
@@ -145,7 +144,66 @@ export default {
                     this.$router.push("/login")                            
                 }
             }) 
-        }
+        },
+        deleteAction(id){
+         this.$axios({
+                method: 'get',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                }
+            })
+            .then(response => {
+                this.querySources()
+                this.$store.dispatch('update',response.data)
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
+        },
+        querySources(){
+                this.$axios({
+                    method: 'get',
+                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    headers: {
+                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                })
+                .then(response => {
+                    this.sources = []
+                    for( var i in response.data.sort() ){
+                        var adapter = response.data[i]
+                         this.$axios({
+                            method: 'get',
+                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            headers: {
+                                Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                            }
+                        })
+                        .then(response2 => {
+                            this.sources.push({
+                                type: response2.data.type,
+                                sources: response2.data.result
+                            })
+                        })
+                        .catch(error2 => {
+                            if(error2.response.status === 401){
+                                this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                                this.$router.push("/login")                            
+                            }
+                        })    
+                    }
+                   })
+                .catch(error => {
+                    if(error.response.status === 401){
+                        this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                        this.$router.push("/login")                            
+                    }
+                })
+        },
     }
 }
 </script>

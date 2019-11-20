@@ -1,7 +1,7 @@
 <template>
     <div>
             <div class="wrapper">
-                <sidebar v-bind:sources="this.sources"></sidebar>
+                <sidebar v-bind:sources="this.sources" v-on:delete="deleteAction"></sidebar>
                 <div id=content>
                     <div class="card">
                         <div class="card-body">
@@ -38,6 +38,26 @@ export default {
     '$route': 'querySources'
     },
     methods:{
+        deleteAction(id){
+            this.sources = []
+         this.$axios({
+                method: 'get',
+                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                }
+            })
+            .then(response => {
+                this.querySources()
+                this.$store.dispatch('update',response.data)
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                    this.$router.push("/login")                            
+                }
+            })
+        },
         querySources(){
                 this.$axios({
                     method: 'get',
@@ -47,7 +67,7 @@ export default {
                     }
                 })
                 .then(response => {
-                    for( var i in response.data ){
+                    for( var i in response.data){
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',

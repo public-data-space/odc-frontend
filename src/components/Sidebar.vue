@@ -7,7 +7,7 @@
                                         <h5>Data Sources</h5>
                                     </div>
                                     <div class="col">
-                                         <router-link :to="{name: 'createdatasource', params: {sources: this.sources}}"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                         <router-link :to="{name: 'createdatasource'}"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                     </div>
                                 </div>
                             <li>
@@ -20,11 +20,11 @@
                                     <span class="border-top my-2"></span>
                                     <div class="row" v-for="source in sourceList.sources" v-bind:key="source.id">
                                         <div class="col">
-                                        <router-link :to="{name: 'createdataasset', params: {sources: sources, sourceid: source.id}}">{{source.datasourcename}}</router-link>
+                                        <router-link :to="{name: 'createdataasset', params: {sourceid: source.id}}">{{source.datasourcename}}</router-link>
                                         </div>
                                         <div class="col">
                                             <span>
-                                                <router-link :to="{name: 'createdatasource', params: {sources: sources, sourceid: source.id}}"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                                <router-link :to="{name: 'createdatasource', params: {sourceid: source.id}}"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
                                             </span>
                                             <span>
                                                 <button v-on:click="deleteAction(source.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>
@@ -47,22 +47,7 @@ export default {
     },
     methods:{
         deleteAction(id){
-         this.$axios({
-                method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('jwt')
-                }
-            })
-            .then(response => {
-                this.$store.dispatch('update',response.data)
-            })
-            .catch(error => {
-                if(error.response.status === 401){
-                    this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                    this.$router.push("/login")                            
-                }
-            })
+            this.$emit("delete", id)
         }
     }
 }

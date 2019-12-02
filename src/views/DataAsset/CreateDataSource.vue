@@ -157,7 +157,7 @@ export default {
                 }
             })
             .then(response => {
-                this.querySources()
+                this.$router.push("/datasource/select")
                 this.$store.dispatch('update',response.data)
             })
             .catch(error => {

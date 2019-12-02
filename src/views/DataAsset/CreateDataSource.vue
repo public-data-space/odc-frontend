@@ -55,7 +55,10 @@ export default {
             type: "",
             name: null,
             id: null,
-            formSchema: {},
+            formSchema: {
+                type:"object",
+                properties:{}
+            },
             sources: []
         };
     },
@@ -68,7 +71,7 @@ export default {
             this.getFormSchema()
         },
         sources: function() {
-            this.type = this.sources[0].type
+            //this.type = this.sources[0].type
             this.updateParams()
         }
     },
@@ -92,8 +95,8 @@ export default {
                 })  
         },
         updateParams(){
-            if(typeof this.datasourceid !== 'undefined'){
-                this.id = this.datasourceid
+            if(typeof this.sourceid !== 'undefined'){
+                this.id = this.sourceid
                 this.$axios({
                     method: 'get',
                     url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
@@ -103,8 +106,8 @@ export default {
                 })
                 .then(response => {
                     this.type=response.data.source.datasourcetype
-                    this.getFormSchema()
-                    
+                    this.name = response.data.source.datasourcename
+                    this.formSchema.value = JSON.parse(response.data.source.data)
                 })
                 .catch(error => {
                     if(error.response.status === 401){
@@ -115,12 +118,12 @@ export default {
             }
         },
         submit(){
-            var urlString;
-            if(this.datasourceid !== 'undefined'){
+            let urlString;
+            if(this.id === null){
                 urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/add'
             }
             else{
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit'
+                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit/'+this.id
             }
             this.$axios({
                 method: 'post',

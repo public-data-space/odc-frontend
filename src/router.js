@@ -75,7 +75,13 @@ export default new Router({
     },
     {
       path: '/datasource/create',
-      name: 'createdatasource',
+      //name: 'createdatasource',
+      component: () => import('./views/DataAsset/CreateDataSource.vue'),
+      beforeEnter: ifNotAuthenticated
+    },
+    {
+      path: '/datasource/edit/:sourceid',
+      name: 'editdatasource',
       component: () => import('./views/DataAsset/CreateDataSource.vue'),
       props: true,
       beforeEnter: ifNotAuthenticated

@@ -7,7 +7,8 @@
                                         <h5>Data Sources</h5>
                                     </div>
                                     <div class="col">
-                                         <router-link :to="{name: 'createdatasource'}"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                         <router-link :to="{ path: '/datasource/create' }"><img src="../assets/images/baseline_add_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                        <router-view :key="$route.fullPath"></router-view>
                                     </div>
                                 </div>
                             <li>
@@ -24,7 +25,8 @@
                                         </div>
                                         <div class="col">
                                             <span>
-                                                <router-link :to="{name: 'createdatasource', params: {sourceid: source.id}}"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                                <router-link :to="{name: 'editdatasource', params: {sourceid: source.id}}"><img src="../assets/images/baseline_edit_white_18dp.png" alt="Edit" style="width:15px"></router-link>
+                                                <router-view :key="$route.fullPath"></router-view>
                                             </span>
                                             <span>
                                                 <button v-on:click="deleteAction(source.id)"><img src="../assets/images/baseline_delete_white_18dp.png" alt="Delete" style="width:15px"></button>

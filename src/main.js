@@ -13,7 +13,7 @@ import "@/assets/stylesheets/darkly.bootstrap.css"
 
 import router from './router'
 import store from './store'
-
+Vue.config.devtools = true;
 router.afterEach((to, from) => {
   store.commit('delete');
 })

@@ -116,6 +116,15 @@ export default {
                     }
                 })
             }
+            else{
+                this.name = null
+                let formSchemaTemp = {
+                    type:"object",
+                    properties:{}
+                }
+                this.formSchema = formSchemaTemp
+                this.getFormSchema()
+            }
         },
         submit(){
             let urlString;

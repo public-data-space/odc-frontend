@@ -66,13 +66,13 @@ export default {
         this.querySources()
     },
     watch: {
-        '$route': 'updateParams',
+        '$route': 'getFormSchema',
         type: function() {
             this.getFormSchema()
         },
         sources: function() {
-            //this.type = this.sources[0].type
-            this.updateParams()
+            this.type = this.sources[0].type
+            this.getFormSchema()
         }
     },
     methods:{
@@ -86,13 +86,14 @@ export default {
                 })
                 .then(response => {
                     this.formSchema = response.data
+                    this.updateParams()
                 })
                 .catch(error => {
                     if(error.response.status === 401){
                         this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                        this.$router.push("/login")                            
+                        this.$router.push("/login")
                     }
-                })  
+                })
         },
         updateParams(){
             if(typeof this.sourceid !== 'undefined'){
@@ -101,29 +102,24 @@ export default {
                     method: 'get',
                     url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
                     headers: {
-                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                        Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
                 })
-                .then(response => {
-                    this.type=response.data.source.datasourcetype
-                    this.name = response.data.source.datasourcename
-                    this.formSchema.value = JSON.parse(response.data.source.data)
-                })
-                .catch(error => {
-                    if(error.response.status === 401){
-                        this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                        this.$router.push("/login")                            
-                    }
-                })
+                    .then(response => {
+                        this.type=response.data.source.datasourcetype
+                        this.name = response.data.source.datasourcename
+                        this.formSchema.value = JSON.parse(response.data.source.data)
+                    })
+                    .catch(error => {
+                        if(error.response.status === 401){
+                            this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                            this.$router.push("/login")
+                        }
+                    })
             }
             else{
                 this.name = null
-                let formSchemaTemp = {
-                    type:"object",
-                    properties:{}
-                }
-                this.formSchema = formSchemaTemp
-                this.getFormSchema()
+                this.id = null
             }
         },
         submit(){

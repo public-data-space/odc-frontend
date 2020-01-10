@@ -103,6 +103,12 @@ export default new Router({
       name: 'configuration',
       component: () => import('./views/Configuration/Configuration.vue'),
       beforeEnter: ifNotAuthenticated
-    }
+    },
+    {
+      path: '/fileupload',
+      name: 'fileupload',
+      component: () => import('./views/DataAsset/FileUpload.vue'),
+      beforeEnter: ifNotAuthenticated
+    },
   ]
 })

@@ -18,7 +18,7 @@ build:
     - master
   artifacts:
     paths:
-      - /home/app/dist
+      - dist/
 
 
 register develop:

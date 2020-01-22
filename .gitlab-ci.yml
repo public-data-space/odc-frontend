@@ -12,8 +12,8 @@ build:
     - dind
   image: node:12.7-alpine
   script:
-    - npm install --no-package-lock
-    - npm run build
+    - yarn install
+    - yarn run build
   only:
     - master
   artifacts:

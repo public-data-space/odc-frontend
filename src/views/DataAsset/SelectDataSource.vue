@@ -1,9 +1,9 @@
 <template>
     <div>
-            <div class="wrapper">
+            <div class="wrapper" style="display: flex;justify-content: space-around;">
                 <sidebar v-bind:sources="this.sources" v-on:delete="deleteAction"></sidebar>
                 <div id=content>
-                    <div class="card">
+                    <div class="card" >
                         <div class="card-body">
                             <p class="card-text">
                                 Bitte wählen sie eine Datenquelle, aus der ein weiteres DataAsset hinzugefügt werden soll, aus der Liste, oder klicken Sie auf das Kreuz um eine weitere Datenquelle des Typs hinzuzufügen.
@@ -50,6 +50,8 @@ export default {
             .then(response => {
                 this.querySources()
                 this.$store.dispatch('update',response.data)
+                this.$router.go()
+
             })
             .catch(error => {
                 if(error.response.status === 401){
@@ -100,3 +102,13 @@ export default {
     }
 }
 </script>
+<style>
+    #content{
+        width: 100%;
+        margin-left: 50px;
+    }
+    .__object-form-item{
+        margin-top: 0px;
+    }
+
+</style>

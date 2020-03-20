@@ -1,7 +1,14 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" style="display: flex;justify-content: space-between;">
         <sidebar v-bind:sources=this.sources v-on:delete="deleteAction"></sidebar>
-        <div class="col-8">
+        <div id="content">
+            <div class="card" style="margin-bottom: 20px;background-color: #303030;">
+                <div class="card-body">
+                    <p class="card-text">
+                        Hier können Sie Ihre Dateien hochladen damit die anderen Nutzer sie herunterladen können.
+                    </p>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <form action="" class="file-upload-form" @submit.prevent="uploadFiles" enctype="multipart/form-data">
@@ -48,7 +55,7 @@
                                    v-model="description" required >
 
                         </div>
-                        <input type="submit" value="Data Asset hinzufügen">
+                        <input class = "btn btn-primary" type="submit" value="Data Asset hinzufügen">
                     </form>
                 </div>
 
@@ -191,6 +198,10 @@
 </script>
 
 <style scoped>
+    #content{
+        width: 100%;
+        margin-left: 50px;
+    }
     :root {
 
     --black: #393838;
@@ -280,6 +291,10 @@
     .details {
         padding: 0 .6rem;
         flex-grow: 2;
+    }
+    #content{
+        width: 100%;
+        margin-left: 50px;
     }
 
 </style>

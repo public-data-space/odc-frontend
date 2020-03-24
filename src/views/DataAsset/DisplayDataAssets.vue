@@ -240,37 +240,45 @@
                 let filteredItemsByAdapterTypes = filteredItemsByAdapterNames.filter((row) => {
                     return !this.datasourceType || (row.datasourcetype === this.datasourceType);
                 })
-                if (this.publish) {
-                    this.unpublish = false;
+                if (this.mungedDatasets.length == 0) {
+                    this.publish =false
+                    this.unpublish = false
                     this.disableUnpublish = true
-                   let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
-                        return (row.status === 2);
-                    })
-                    let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
-                        return !this.datasourceName || (row.datasourcename === this.datasourceName);
-                    })
-                  let  filteredItemsByAdapterTypes2 = filteredItemsByAdapterNames2.filter((row) => {
-                      return !this.datasourceType || (row.datasourcetype === this.datasourceType);
-                    })
-                    return filteredItemsByAdapterTypes2
-                } else {
-                    this.disableUnpublish = false
+                    this.disablePublish= true
                 }
-                if (this.unpublish) {
-                    this.publish = false;
-                    this.disablePublish = true
-                    let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
-                        return (row.status === 1);
-                    })
-                    let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
-                        return !this.datasourceName || (row.datasourcename === this.datasourceName);
-                    })
-                    let  filteredItemsByAdapterTypes2 = filteredItemsByAdapterNames2.filter((row) => {
-                        return !this.datasourceType || (row.datasourcetype === this.datasourceType);
-                    })
-                    return filteredItemsByAdapterTypes2
-                } else {
-                    this.disablePublish = false
+                else {
+                    if (this.publish) {
+                        this.unpublish = false;
+                        this.disableUnpublish = true
+                        let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
+                            return (row.status === 2);
+                        })
+                        let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
+                            return !this.datasourceName || (row.datasourcename === this.datasourceName);
+                        })
+                        let  filteredItemsByAdapterTypes2 = filteredItemsByAdapterNames2.filter((row) => {
+                            return !this.datasourceType || (row.datasourcetype === this.datasourceType);
+                        })
+                        return filteredItemsByAdapterTypes2
+                    } else {
+                        this.disableUnpublish = false
+                    }
+                    if (this.unpublish) {
+                        this.publish = false;
+                        this.disablePublish = true
+                        let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
+                            return (row.status === 1);
+                        })
+                        let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
+                            return !this.datasourceName || (row.datasourcename === this.datasourceName);
+                        })
+                        let  filteredItemsByAdapterTypes2 = filteredItemsByAdapterNames2.filter((row) => {
+                            return !this.datasourceType || (row.datasourcetype === this.datasourceType);
+                        })
+                        return filteredItemsByAdapterTypes2
+                    } else {
+                        this.disablePublish = false
+                    }
                 }
 
                 return filteredItemsByAdapterTypes

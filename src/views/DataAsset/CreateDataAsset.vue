@@ -61,7 +61,7 @@ export default {
                 this.id = this.sourceid
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
+                    url: this.$env.apiBaseUrl+'/api/datasources/find/id/'+this.id,
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -86,7 +86,7 @@ export default {
         deleteAction(id){
          this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -106,7 +106,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -117,7 +117,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }
@@ -146,7 +146,7 @@ export default {
         submit(){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/add',
+                url: this.$env.apiBaseUrl+'/api/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data: this.formSchema.value,
@@ -172,7 +172,7 @@ export default {
             formData.append('file', this.file)
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/dataassets/add',
+                url: this.$env.apiBaseUrl+'/api/dataassets/add',
                 data: formData,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt'),
@@ -192,7 +192,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -203,7 +203,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

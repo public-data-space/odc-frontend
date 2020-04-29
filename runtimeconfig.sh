@@ -12,7 +12,7 @@ vars=$(join_by ',' $vars)
 echo "Found variables $vars"
 
 #echo " VUE_APP_BACKEND_BASE_URL: '${VUE_APP_BACKEND_BASE_URL}' , VUE_APP_CONFIG_MANAGER_BASE_URL:${VUE_APP_CONFIG_MANAGER_BASE_URL} " >> .env
-for file in /app/js/*.js;
+for file in /app/js/app.*.js;
 do
   echo "Processing $file ...";
 

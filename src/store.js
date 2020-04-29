@@ -53,13 +53,13 @@ export default new Vuex.Store({
         Vue.toasted.error(context.getters.getText, {"position": "top-center","duration": "1500"})
       }
     },
-    loadSources:({ commit },type) =>{
-      Vue.axios.get(process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',auth).then(result => {
+    loadSources:({ commit }, config) =>{
+      Vue.axios.get(config.configBase+'/listAdapters',auth).then(result => {
         let adpts = []
 
         for( var i in result.data.sort() ){
           let adapter = result.data[i]
-          Vue.axios.get(process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,auth).then(adapt => {
+          Vue.axios.get(config.apiBase+'/api/datasources/find/type/'+adapter.name,auth).then(adapt => {
             adpts.push({
               type: adapt.data.type,
               sources: adapt.data.result

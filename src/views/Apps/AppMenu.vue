@@ -36,7 +36,7 @@ export default {
           updateParams(){
             this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images',
+                url: this.$env.configManagerUrl+'/images',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -54,7 +54,7 @@ export default {
         startAction(uuid){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images/start/',
+                url: this.$env.configManagerUrl+'/images/start/',
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
@@ -74,7 +74,7 @@ export default {
         stopAction(uuid){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images/stop/',
+                url: this.$env.configManagerUrl+'/images/stop/',
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')

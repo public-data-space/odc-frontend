@@ -196,7 +196,7 @@
             this.setData()
         },
         created() {
-            this.$store.dispatch('loadSources');
+        this.$store.dispatch('loadSources', {apiBase:this.$env.apiBaseUrl, configBase:this.$env.configManagerUrl});
         },
         computed: {
             sources() {
@@ -329,7 +329,7 @@
             setData() {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -375,7 +375,7 @@
             publishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/publish',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/publish',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -393,7 +393,7 @@
             unpublishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/unpublish',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/unpublish',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -411,7 +411,7 @@
             deleteAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/delete',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/delete',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

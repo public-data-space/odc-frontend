@@ -109,7 +109,7 @@
             querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -120,7 +120,7 @@
                             var adapter = response.data[i]
                             this.$axios({
                                 method: 'get',
-                                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                                url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                                 headers: {
                                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                                 }
@@ -177,7 +177,7 @@
                 formData.append("data",rawData)
                 this.$axios({
                     method: 'post',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/upload/file',
+                    url: this.$env.apiBaseUrl+'/api/upload/file',
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data ; application/json',

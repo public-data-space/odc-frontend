@@ -5,7 +5,7 @@
             <div class="card" style="margin-bottom: 20px;background-color: #303030;">
                 <div class="card-body">
                     <p class="card-text">
-                        Hier können Sie Ihre Dateien hochladen damit die anderen Nutzer sie herunterladen können.
+                        Laden Sie Daten direkt von ihrem Dateisystem hoch, um sie mittels des Konnektors verfügbar zu machen.
                     </p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             <small :class="{ invalid: !valid }">
                                 Total : {{ bytesToSize(sizes) }}
                             </small>
-                        </div>
+                        </div>f
                         <ul v-show="showUploads" class="card-list">
                             <li v-for="(file, index) in attachments" v-key:id="index" class="card" v-bind:ref="`card-${index}`" v-bind:id="`card-${index}`">
                                 <div class="checkbox-wrap">
@@ -186,10 +186,13 @@
                 }).then( response => {
                     this.$store.dispatch('update',response.data)
                     this.$router.push("/job")
-                })
-                    .catch(function(){
-                        console.log('FAILURE!!');
-                    });
+                }).catch(error => {
+                    if(error.response.status === 401){
+                         this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                         this.$router.push("/login")
+                    }
+                    console.log(error.response.status)
+                 });
 
             },
         }

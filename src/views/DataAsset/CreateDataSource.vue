@@ -5,14 +5,14 @@
             <div class="card" style="margin-bottom: 20px;">
                 <div class="card-body">
                     <p v-if="typeof this.sourceid !== 'undefined'" class="card-text">
-                        Datasource <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
-                        namens <strong class="nummer-name-dataset">{{this.name}}</strong>
-                        von dem Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> bearbeiten . <br>
-                        Bitte geben Sie alle Felder aus.
+                        Datenquelle <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
+                        <strong class="nummer-name-dataset">{{this.name}}</strong>
+                        des Adapters <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> bearbeiten . <br>
+                        Bitte füllen Sie alle Felder aus.
                     </p>
                     <p v-else class="card-text">
-                        Datasource für den Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> erstellen . <br>
-                        Bitte geben Sie alle Felder aus.
+                        Datenquelle für den Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> registrieren . <br>
+                        Bitte füllen Sie alle Felder aus.
                     </p>
                 </div>
             </div>

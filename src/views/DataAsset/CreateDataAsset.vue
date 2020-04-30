@@ -5,9 +5,9 @@
                 <div class="card">
                     <div class="card-body">
                         <p class="card-text">
-                            Datasets für Datasource <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
-                            namens <strong class="nummer-name-dataset">{{this.name}}</strong> erstellen . <br>
-                            Bitte geben Sie alle Felder aus.
+                            Data Asset der Datenquelle <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
+                            <strong class="nummer-name-dataset">{{this.name}}</strong> registrieren. <br>
+                            Bitte füllen Sie alle Felder aus.
                         </p>
                     </div>
                 </div>

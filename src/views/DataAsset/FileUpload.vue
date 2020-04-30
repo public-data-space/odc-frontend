@@ -27,7 +27,7 @@
                             <small :class="{ invalid: !valid }">
                                 Total : {{ bytesToSize(sizes) }}
                             </small>
-                        </div>f
+                        </div>
                         <ul v-show="showUploads" class="card-list">
                             <li v-for="(file, index) in attachments" v-key:id="index" class="card" v-bind:ref="`card-${index}`" v-bind:id="`card-${index}`">
                                 <div class="checkbox-wrap">

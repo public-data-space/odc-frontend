@@ -228,7 +228,7 @@
                 return this.dataassets.map((v) => {
                     return {
                         ...v,
-                        datasourcetype: this.selectDatasourceType(v.sourceid),
+                        datasourcetype: this.getDatasource(v.sourceid).datasourcetype,
                         datasourcename: this.getDatasource(v.sourceid).datasourcename
                     }
                 })
@@ -287,12 +287,7 @@
                 let datasource = []
                 for (let i in this.dataassets) {
                     let id = this.dataassets[i].sourceid
-                    if(typeof this.getDatasource(id).datasourcetype === 'undefined') {
-                        datasource.push("File Upload")
-                    }
-                    else {
-                        datasource.push(this.getDatasource(id).datasourcetype)
-                    }
+                    datasource.push(this.getDatasource(id).datasourcetype)
                 }
                 return datasource
             },
@@ -306,14 +301,6 @@
             },
         },
         methods: {
-            selectDatasourceType(id){
-                if(typeof this.getDatasource(id).datasourcetype === 'undefined') {
-                    return "File Upload"
-                }
-                else {
-                    return this.getDatasource(id).datasourcetype
-                }
-            },
             getCurrentItems(e) {
                 this.currentItems = e
             },

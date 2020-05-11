@@ -56,10 +56,13 @@ export default new Vuex.Store({
     loadSources:({ commit },type) =>{
       Vue.axios.get(process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',auth).then(result => {
         let adpts = []
-
+        let adapterNames =[]
         for( var i in result.data.sort() ){
-          let adapter = result.data[i]
-          Vue.axios.get(process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,auth).then(adapt => {
+          adapterNames.push(result.data[i].name)
+        }
+        adapterNames.push("File Upload")
+        for( var i in adapterNames){
+          Vue.axios.get(process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapterNames[i],auth).then(adapt => {
             adpts.push({
               type: adapt.data.type,
               sources: adapt.data.result

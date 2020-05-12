@@ -61,9 +61,8 @@ export default new Vuex.Store({
           adapterNames.push(result.data[i].name)
         }
         adapterNames.push("File Upload")
-        for( var i in adapterNames){
-          let adapter = result.data[i]
-          Vue.axios.get(config.apiBase+'/api/datasources/find/type/'+adapter.name,auth).then(adapt => {
+        for( var j in adapterNames){
+          Vue.axios.get(config.apiBase+'/api/datasources/find/type/'+adapterNames[j],auth).then(adapt => {
             adpts.push({
               type: adapt.data.type,
               sources: adapt.data.result

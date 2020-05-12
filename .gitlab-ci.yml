@@ -16,6 +16,7 @@ build:
     - yarn run build
   only:
     - master
+    - develop
   artifacts:
     paths:
       - dist

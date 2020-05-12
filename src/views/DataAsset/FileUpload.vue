@@ -5,7 +5,7 @@
             <div class="card" style="margin-bottom: 20px;background-color: #303030;">
                 <div class="card-body">
                     <p class="card-text">
-                        Hier können Sie Ihre Dateien hochladen damit die anderen Nutzer sie herunterladen können.
+                        Laden Sie Daten direkt von ihrem Dateisystem hoch, um sie mittels des Konnektors verfügbar zu machen.
                     </p>
                 </div>
             </div>
@@ -109,7 +109,7 @@
             querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -120,7 +120,7 @@
                             var adapter = response.data[i]
                             this.$axios({
                                 method: 'get',
-                                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                                url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                                 headers: {
                                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                                 }
@@ -177,7 +177,7 @@
                 formData.append("data",rawData)
                 this.$axios({
                     method: 'post',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/upload/file',
+                    url: this.$env.apiBaseUrl+'/api/upload/file',
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data ; application/json',
@@ -186,10 +186,13 @@
                 }).then( response => {
                     this.$store.dispatch('update',response.data)
                     this.$router.push("/job")
-                })
-                    .catch(function(){
-                        console.log('FAILURE!!');
-                    });
+                }).catch(error => {
+                    if(error.response.status === 401){
+                         this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
+                         this.$router.push("/login")
+                    }
+                    console.log(error.response.status)
+                 });
 
             },
         }

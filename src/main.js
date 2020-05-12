@@ -8,6 +8,8 @@ import ncformStdComps from '@ncform/ncform-theme-elementui';
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.css";
 import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
+import RuntimeConfiguration from './runtimeconfig';
+import { glueConfig as GLUE_CONFIG } from '../config/user-config';
 
 Vue.use(Vuetify);
 
@@ -23,6 +25,7 @@ router.afterEach((to, from) => {
   store.commit('delete');
 })
 Vue.use(Element);
+Vue.use(RuntimeConfiguration, { baseConfig: GLUE_CONFIG, debug: true });
 
 Vue.use(vueNcform, { extComponents: ncformStdComps, /*lang: 'zh-cn'*/ });
 window.$http = Vue.prototype.$http = axios;

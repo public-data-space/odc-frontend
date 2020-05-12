@@ -1,16 +1,16 @@
 <template>
     <div class="wrapper">
         <ul class="list-group" style="width: 1098px;height: 36px;">
-            <li v-for="app in images" class="list-group-item" v-bind:key=app.id v-bind:class="{ disabled: app.containerIds.length==0}">
+            <li v-for="app in images" class="list-group-item" v-bind:key=app.uuid v-bind:class="{ disabled: app.containers===0}">
                 <div class="row">
                     <div class="col-10">
                     {{app.name}}
                     </div>
                     <div class="col-1">
-                        <button v-on:click="startAction(app.id)" class="btn btn-primary" v-bind:class="{ disabled: app.containerIds.length!=0}">Start</button>
+                        <button v-on:click="startAction(app.uuid)" class="btn btn-primary" v-bind:class="{ disabled: app.containers!=0}">Start</button>
                     </div>
                     <div class="col-1">
-                        <button v-on:click="stopAction(app.containerIds)" class="btn btn-primary mb1 bg-red" v-bind:class="{ disabled: app.containerIds.length==0}">Stop</button>
+                        <button v-on:click="stopAction(app.uuid)" class="btn btn-primary mb1 bg-red" v-bind:class="{ disabled: app.containers===0}">Stop</button>
                     </div>
                 </div>
             </li>
@@ -36,7 +36,7 @@ export default {
           updateParams(){
             this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images',
+                url: this.$env.configManagerUrl+'/images',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -51,10 +51,11 @@ export default {
                 }
             })
         },
-        startAction(id){
+        startAction(uuid){
             this.$axios({
-                method: 'get',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images/start/'+id,
+                method: 'post',
+                url: this.$env.configManagerUrl+'/images/start/',
+                data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -70,11 +71,11 @@ export default {
                 }
             })
         },
-        stopAction(ids){
+        stopAction(uuid){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/images/stop/',
-                data: ids,
+                url: this.$env.configManagerUrl+'/images/stop/',
+                data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }

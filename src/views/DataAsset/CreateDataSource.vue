@@ -5,14 +5,14 @@
             <div class="card" style="margin-bottom: 20px;">
                 <div class="card-body">
                     <p v-if="typeof this.sourceid !== 'undefined'" class="card-text">
-                        Datasource <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
-                        namens <strong class="nummer-name-dataset">{{this.name}}</strong>
-                        von dem Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> bearbeiten . <br>
-                        Bitte geben Sie alle Felder aus.
+                        Datenquelle <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
+                        <strong class="nummer-name-dataset">{{this.name}}</strong>
+                        des Adapters <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> bearbeiten . <br>
+                        Bitte füllen Sie alle Felder aus.
                     </p>
                     <p v-else class="card-text">
-                        Datasource für den Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> erstellen . <br>
-                        Bitte geben Sie alle Felder aus.
+                        Datenquelle für den Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> registrieren . <br>
+                        Bitte füllen Sie alle Felder aus.
                     </p>
                 </div>
             </div>
@@ -105,7 +105,7 @@ export default {
             this.type = this.typeAdapter
               this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/schema/type/'+this.typeAdapter,
+                    url: this.$env.apiBaseUrl+'/api/datasources/schema/type/'+this.typeAdapter,
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -126,7 +126,7 @@ export default {
                 this.id = this.sourceid
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
+                    url: this.$env.apiBaseUrl+'/api/datasources/find/id/'+this.id,
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -151,10 +151,10 @@ export default {
         submit(){
             let urlString;
             if(this.id === null){
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/add'
+                urlString = this.$env.apiBaseUrl+'/api/datasources/add'
             }
             else{
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit/'+this.id
+                urlString = this.$env.apiBaseUrl+'/api/datasources/edit/'+this.id
             }
             this.$axios({
                 method: 'post',
@@ -182,7 +182,7 @@ export default {
         deleteAction(id){
          this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -201,7 +201,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -212,7 +212,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

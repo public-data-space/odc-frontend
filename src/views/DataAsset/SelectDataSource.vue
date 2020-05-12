@@ -42,7 +42,7 @@ export default {
             this.sources = []
          this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -63,7 +63,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -73,7 +73,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

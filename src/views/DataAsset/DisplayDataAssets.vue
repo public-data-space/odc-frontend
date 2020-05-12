@@ -3,7 +3,7 @@
         <div class="card" style="margin-bottom: 20px;">
             <div class="card-body" style="display: flex;justify-content: center;">
                 <p class="card-text">
-                    Hier sind alle angelegten Datasets
+                    Registrierte Datensätze
                 </p>
             </div>
         </div>
@@ -35,11 +35,11 @@
                           v-model="publish"></v-switch>
                 <v-switch :disabled="disableUnpublish" label="Unpublished" class="switch-label"
                           v-model="unpublish"></v-switch>
-                <v-btn v-if="checkIfAllPublished===true" @click="publishAll" class="publishAll">Veröffentlichen Alle
+                <v-btn v-if="checkIfAllPublished===true" @click="publishAll" class="publishAll">Alle Veröffentlichen
                 </v-btn>
                 <v-btn v-if="checkIfAllPublished===false" @click="unPublishAll" class="unPublishAll">Zurückhalten
                 </v-btn>
-                <v-btn v-if="filteredItems.length==0" :disabled="true" class="publishAllDisabled">Veröffentlichen Alle
+                <v-btn v-if="filteredItems.length==0" :disabled="true" class="publishAllDisabled">Alle Veröffentlichen
                 </v-btn>
             </v-container>
 
@@ -57,7 +57,7 @@
                 <template v-slot:body="{ items }">
                     <tbody class="tableBody" >
                     <tr v-if="items.length==0">
-                        <td colspan="100%" style="text-align: center ;font-size: 20px;font-family: monospace;">Oops! Leider wurde nichts gefunden</td>
+                        <td colspan="100%" style="text-align: center ;font-size: 20px;font-family: monospace;">Es sind noch keine Datensätze registriert.</td>
                     </tr>
                     <tr v-else v-for="item in items" >
                         <td @click="rowClick(item)">
@@ -95,7 +95,7 @@
                                 </button>
 
                                 <a :href="'http://localhost:8090/data/'+item.id">
-                                <span title="Download Daten"
+                                <span title="Download"
                                       style="color: #3498DB;text-shadow: 0 0 2px white;"
                                       aria-hidden="true"
                                       class="v-icon material-icons t">system_update_alt</span></a>
@@ -196,7 +196,7 @@
             this.setData()
         },
         created() {
-            this.$store.dispatch('loadSources');
+        this.$store.dispatch('loadSources', {apiBase:this.$env.apiBaseUrl, configBase:this.$env.configManagerUrl});
         },
         computed: {
             sources() {
@@ -329,7 +329,7 @@
             setData() {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -375,7 +375,7 @@
             publishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/publish',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/publish',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -393,7 +393,7 @@
             unpublishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/unpublish',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/unpublish',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -411,7 +411,7 @@
             deleteAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL + '/api/dataassets/' + id + '/delete',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/delete',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

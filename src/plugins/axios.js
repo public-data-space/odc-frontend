@@ -2,7 +2,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
-
+import app from '../main.js'; // import the instance
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -18,7 +18,7 @@ const _axios = axios.create(config);
 
 _axios.interceptors.request.use(
   function(config) {
-    // Do something before request is sent
+    app.$Progress.start();
     return config;
   },
   function(error) {
@@ -30,7 +30,7 @@ _axios.interceptors.request.use(
 // Add a response interceptor
 _axios.interceptors.response.use(
   function(response) {
-    // Do something with response data
+    app.$Progress.finish();
     return response;
   },
   function(error) {
@@ -56,6 +56,6 @@ Plugin.install = function(Vue, options) {
   });
 };
 
-Vue.use(Plugin)
+Vue.use(Plugin);
 
 export default Plugin;

@@ -2,6 +2,7 @@
   <div id="app">
       <Header></Header>
       <div class="container">
+          <vue-progress-bar />
           <br />
           <div class="row">
               <div class="col-xl">

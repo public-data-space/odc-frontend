@@ -50,7 +50,7 @@ export default {
         login() {
            this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/login',
+                url: this.$env.apiBaseUrl+'/login',
                 data: {
                     username: this.username,
                     password: this.password

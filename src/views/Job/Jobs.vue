@@ -54,7 +54,7 @@
                     findAll () {
                         this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/jobs/find/all',
+                            url: this.$env.apiBaseUrl+'/api/jobs/find/all',
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }
@@ -72,7 +72,7 @@
                     deleteAction (){
                         this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/jobs/delete/all',
+                            url: this.$env.apiBaseUrl+'/api/jobs/delete/all',
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

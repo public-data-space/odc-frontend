@@ -4,10 +4,17 @@ import Toasted from 'vue-toasted'
 Vue.use(Toasted)
 Vue.use(Vuex)
 
+let auth = {
+  headers: {
+    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+  }
+}
+
 export default new Vuex.Store({
   state: {
     status:null,
     text:null,
+    sources:[]
   },
   mutations: {
     update(state, newInfo){
@@ -17,6 +24,9 @@ export default new Vuex.Store({
     delete(state){
       state.status = null
       state.text = null
+    },
+    SAVE_SOURCES(state, sources) {
+      state.sources = sources;
     }
   },
   getters:{
@@ -25,6 +35,9 @@ export default new Vuex.Store({
     },
     getText: state => {
       return state.text
+    },
+    getSources:state => {
+      return state.sources
     }
   },
   actions: {
@@ -39,6 +52,28 @@ export default new Vuex.Store({
       else if(context.getters.getStatus == 'error'){
         Vue.toasted.error(context.getters.getText, {"position": "top-center","duration": "1500"})
       }
+    },
+    loadSources:({ commit }, config) =>{
+      Vue.axios.get(config.configBase+'/listAdapters',auth).then(result => {
+        let adpts = []
+        let adapterNames =[]
+        for( var i in result.data.sort() ){
+          adapterNames.push(result.data[i].name)
+        }
+        adapterNames.push("File Upload")
+        for( var j in adapterNames){
+          Vue.axios.get(config.apiBase+'/api/datasources/find/type/'+adapterNames[j],auth).then(adapt => {
+            adpts.push({
+              type: adapt.data.type,
+              sources: adapt.data.result
+            })
+          });
+        }
+        commit('SAVE_SOURCES', adpts);
+      }).catch(error => {
+        throw new Error(`API ${error}`);
+      });
+
     }
   }
 })

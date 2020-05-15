@@ -1,8 +1,22 @@
 <template>
-    <div class="wrapper">   
+    <div class="wrapper" style="display: flex;justify-content: space-between;">
         <sidebar v-bind:sources=this.sources v-on:delete="deleteAction"></sidebar>
-        <div id=content>
-            <div class="row">
+        <div id="content" >
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-body">
+                    <p v-if="typeof this.sourceid !== 'undefined'" class="card-text">
+                        Datenquelle <strong class="nummer-name-dataset">Nr.{{this.id}}</strong>
+                        <strong class="nummer-name-dataset">{{this.name}}</strong>
+                        des Adapters <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> bearbeiten . <br>
+                        Bitte füllen Sie alle Felder aus.
+                    </p>
+                    <p v-else class="card-text">
+                        Datenquelle für den Adapter <strong class="nummer-name-dataset">{{this.typeAdapter}}</strong> registrieren . <br>
+                        Bitte füllen Sie alle Felder aus.
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: -10px">
                 <div class="col">
                     <div class="form-group">
                         <label for="datasourceName">Data Source Name</label>
@@ -10,6 +24,7 @@
                         class="form-control"
                         id="datasourceName"
                         name="datasourceName"
+                        :required =true
                         placeholder="My Data Source"
                         v-model="name">
                     </div>
@@ -17,24 +32,33 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="datasourceType">Data Source Type</label>
-                        <select class="form-control"
+                        <input type="text"
+                               class="form-control"
+                               id="datasourceType"
+                               name="datasourceType"
+                               placeholder="My Data Source"
+                               :disabled=true
+                               style="color: #9d9a9a"
+                               :required =true
+                               v-model="type">
+                        <!--select class="form-control"
                         id="datasourceType"
                         name="datasourceType"
                         v-model="type"
-                        :required="true">
+                        :disabled="true">
                         <option v-for="option in sources" 
                         v-bind:key=option.type
                         v-bind:value="option.type"
-                        :selected="option.type === type"    
+                        :selected="option.type === type"
                         >{{ option.type }}</option>
-                        </select>
+                        </select-->
                     </div>
                 </div>
             </div>
             <div class="row">
                 <ncform :form-schema="formSchema" form-name="dataInput" v-model="formSchema.value"></ncform>
             </div>
-            <div class="row">
+            <div class="row" style="margin-left: auto ; margin-top: 20px;">
                 <button v-on:click="submit()" class="btn btn-primary">Data Source hinzufügen</button>
             </div>
         </div>
@@ -49,7 +73,7 @@ export default {
   components: {
     Sidebar
   },
-  props:['sourceid'],
+  props:['sourceid','typeAdapter'],
     data() {
         return {
             type: "",
@@ -77,9 +101,11 @@ export default {
     },
     methods:{
         getFormSchema(){
+            console.log("Type "+this.sourceid)
+            this.type = this.typeAdapter
               this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/schema/type/'+this.type,
+                    url: this.$env.apiBaseUrl+'/api/datasources/schema/type/'+this.typeAdapter,
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -100,7 +126,7 @@ export default {
                 this.id = this.sourceid
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/id/'+this.id,
+                    url: this.$env.apiBaseUrl+'/api/datasources/find/id/'+this.id,
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -125,10 +151,10 @@ export default {
         submit(){
             let urlString;
             if(this.id === null){
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/add'
+                urlString = this.$env.apiBaseUrl+'/api/datasources/add'
             }
             else{
-                urlString = process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/edit/'+this.id
+                urlString = this.$env.apiBaseUrl+'/api/datasources/edit/'+this.id
             }
             this.$axios({
                 method: 'post',
@@ -156,7 +182,7 @@ export default {
         deleteAction(id){
          this.$axios({
                 method: 'get',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/delete/'+id,
+                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -175,7 +201,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: process.env.VUE_APP_CONFIG_MANAGER_BASE_URL+'/listAdapters',
+                    url: this.$env.configManagerUrl+'/listAdapters',
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -186,7 +212,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/datasources/find/type/'+adapter.name,
+                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }
@@ -215,3 +241,22 @@ export default {
     }
 }
 </script>
+<style>
+    #content{
+        width: 100%;
+        margin-left: 50px;
+    }
+    .__object-form-item{
+        margin-top: 0px;
+    }
+    .form-control:disabled {
+        background-color:#303030;
+    }
+    .nummer-name-dataset{
+        color: #3498DB;
+    }
+    .ncform {
+        width: 1000px;
+    }
+
+</style>

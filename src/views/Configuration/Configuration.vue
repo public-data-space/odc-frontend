@@ -71,7 +71,7 @@ export default {
         getConfig(){
             this.$axios({
             method: 'get',
-            url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/configuration/get',
+            url: this.$env.apiBaseUrl+'/api/configuration/get',
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
             }
@@ -89,7 +89,7 @@ export default {
         submit(){
             this.$axios({
                 method: 'post',
-                url: process.env.VUE_APP_BACKEND_BASE_URL+'/api/configuration/edit',
+                url: this.$env.apiBaseUrl+'/api/configuration/edit',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 },

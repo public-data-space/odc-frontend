@@ -1,8 +1,13 @@
 <template>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="max-height: 60px;">
             <a class="navbar-brand" href=".">
-                <img src="../assets/images/ids-white.png" alt="Logo of Industrial data space" class="navbar-logo" style="width: auto; height: 50px;">
+                <div style="display: flex">
+                    <img src="../assets/images/ids-white2.png" alt="Logo of Industrial data space" class="navbar-logo" style="width: auto; height: 50px;margin-right: 10px;">
+                    <div class="boxhead">
+                        <h2 style="font-size: 1.2rem;color: white;margin: auto;" >International</h2>
+                        <h2 style="font-size: 1.2rem;color: white;margin: auto;" ><strong>Data Spaces</strong></h2></div>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

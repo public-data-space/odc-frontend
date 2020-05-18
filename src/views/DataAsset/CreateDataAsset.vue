@@ -12,6 +12,19 @@
                     </div>
                 </div>
             <ncform :form-schema="formSchema" form-name="dataInput" v-model="formSchema.value" style="margin-left: -13px;"></ncform>
+            <div >
+                <label class="licensesLabel">
+                    Lizenz
+                    <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px;">
+                </label>
+                <div style=" display:none ;clear: both;" id="divLicenses">
+                    <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseId">
+                        <option  class="form-control" v-for="license in licenses"
+                        >{{ license.id }}</option>
+                    </select>
+
+                </div>
+            </div>
             <button v-on:click="submit()" class="btn btn-primary" style="margin-top: 20px">Data Asset hinzufügen</button>
         </div>
     </div>
@@ -20,6 +33,8 @@
             
 <script>
 import Sidebar from '@/components/Sidebar.vue'
+import licenses from '@/licenses.json'
+
 export default {
     name:"Create",
     components: {
@@ -28,6 +43,8 @@ export default {
     props:['sourceid'],
     data() {
         return {
+            licenses:licenses,
+            licenseId:"CC0-1.0",
             formSchema: {
                 type:"object",
                 properties:{}
@@ -53,6 +70,17 @@ export default {
         }
     },
     methods:{
+        showMe (box) {
+        var chboxs = document.getElementsByName("activeLizenz");
+        var vis = "none";
+        for(var i=0;i<chboxs.length;i++) {
+            if(chboxs[i].checked){
+                vis = "block";
+                break;
+            }
+        }
+        document.getElementById(box).style.display = vis;
+        },
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
@@ -144,21 +172,32 @@ export default {
                 })
         },
         submit(){
+            var licenseurl = ""
+            var licensetitle = ""
+
+            for (let i in this.licenses){
+               if (this.licenseId == this.licenses[i].id){
+                   licenseurl = this.licenses[i].url
+                   licensetitle = this.licenses[i].title
+               }
+            }
             this.$axios({
                 method: 'post',
                 url: this.$env.apiBaseUrl+'/api/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data: this.formSchema.value,
-                    datasourcetype: this.type
+                    datasourcetype: this.type,
+                    licenseurl:licenseurl,
+                    licensetitle:licensetitle
                 },
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
             })
             .then(response => {
-                this.$store.dispatch('update',response.data)
-                this.$router.push("/job")
+                //this.$store.dispatch('update',response.data)
+                //this.$router.push("/job")
             })
             .catch(error => {
                 if(error.response.status === 401){
@@ -247,5 +286,37 @@ export default {
     }
     .ncform{
         width: 1000px;
+    }
+    .licenseSelect{
+        dropupAuto: false;
+        -webkit-appearance: menulist;
+        background-color: #FFF;
+        background-image: none;
+        border-radius: 4px;
+        border: 1px solid #DCDFE6;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        color: #606266;
+        display: inline-block;
+        font-size: inherit;
+        height: 40px;
+        line-height: 40px;
+        outline: 0;
+        padding: 0 15px;
+        -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+        transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+        width: 100%;
+    }
+    .licensesLabel{
+        font-weight :bold;
+        visibility:visible;
+        text-align: right;
+        vertical-align: middle;
+        font-size: 14px;
+        color: #606266;
+        line-height: 40px;
+        padding: 0 12px 0 0;
+        display: flex;
+        align-items: center;
     }
 </style>

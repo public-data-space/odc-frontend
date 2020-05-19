@@ -109,7 +109,7 @@
             querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.configManagerUrl+'/listAdapters',
+                    url: this.$env.apiBaseUrl+'/api/listAdapters',
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

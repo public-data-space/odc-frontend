@@ -196,8 +196,8 @@ export default {
                 }
             })
             .then(response => {
-                //this.$store.dispatch('update',response.data)
-                //this.$router.push("/job")
+                this.$store.dispatch('update',response.data)
+                this.$router.push("/job")
             })
             .catch(error => {
                 if(error.response.status === 401){

@@ -42,6 +42,13 @@
                             placeholder=""
                             v-model="configuration.curator">
                 </div>
+                <div class="form-group">
+                    <label for="connectorCountry">Konektorstandort</label>
+                    <select id="connectorCountry" name="locality" class="form-control" v-model="geoname" :required="true">
+                        <option  class="form-control" v-for="country in countries"
+                                  >{{ country.countryName }}</option>
+                    </select>
+                </div>
                 <button v-on:click="submit()" class="btn btn-primary">Konfiguration bearbeiten</button>
             </div>
         </div>
@@ -49,15 +56,19 @@
 </template>
 
 <script>
+    import geonames from '@/allCountriesWithGeonames.json'
 export default {
     name:"Configuration",
     data() {
         return {
+            countries:geonames.geonames,
+            geoname:"Deutschland",
             configuration:{
                 url:"",
                 maintainer:"",
                 curator:"",
-                title:""
+                title:"",
+                country:""
             },
         };
     },
@@ -87,6 +98,17 @@ export default {
             })
         },
         submit(){
+            let geonameId = ""
+            if (this.geoname == "") {
+                document.getElementById("connectorCountry").required = true
+            }
+            for (let i in this.countries){
+                if (this.countries[i].countryName == this.geoname){
+                    geonameId = this.countries[i].geonameId
+                }
+            }
+            let gemapptesLand = "https://www.geonames.org/"+geonameId
+            this.configuration.country = gemapptesLand
             this.$axios({
                 method: 'post',
                 url: this.$env.apiBaseUrl+'/api/configuration/edit',

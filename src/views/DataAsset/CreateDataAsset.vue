@@ -14,15 +14,15 @@
             <ncform :form-schema="formSchema" form-name="dataInput" v-model="formSchema.value" style="margin-left: -13px;"></ncform>
             <div >
                 <label class="licensesLabel">
-                    Lizenz
+                    Lizenz ändern (Default: CC0 1.0)
                     <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px;">
                 </label>
                 <div style=" display:none ;clear: both;" id="divLicenses">
-                    <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseId">
+                    <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseTitle">
                         <option  class="form-control" v-for="license in licenses"
-                        >{{ license.id }}</option>
+                        >{{ license.title }}</option>
                     </select>
-
+                    (Unter Umständen wird diese Auswahl im Datenquellenadapter geändert, z.B. wenn Lizenzinformationen aus externen Quellen vorliegen.)
                 </div>
             </div>
             <button v-on:click="submit()" class="btn btn-primary" style="margin-top: 20px">Data Asset hinzufügen</button>
@@ -44,7 +44,7 @@ export default {
     data() {
         return {
             licenses:licenses,
-            licenseId:"CC0-1.0",
+            licenseTitle:"CC0 1.0",
             formSchema: {
                 type:"object",
                 properties:{}
@@ -176,7 +176,7 @@ export default {
             var licensetitle = ""
 
             for (let i in this.licenses){
-               if (this.licenseId == this.licenses[i].id){
+               if (this.licenseTitle == this.licenses[i].title){
                    licenseurl = this.licenses[i].url
                    licensetitle = this.licenses[i].title
                }

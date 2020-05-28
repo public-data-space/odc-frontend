@@ -358,17 +358,47 @@
                 return datasource
             },
             publishAll() {
-                for (let i in this.filteredItems) {
-                    let id = this.filteredItems[i].id
-                    this.publishAction(id)
-                }
+                this.$axios({
+                    method: 'get',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/all/publish',
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                })
+                    .then(response => {
+                        for (let i in this.filteredItems) {
+                            let id = this.filteredItems[i].id
+                            this.dataassets.find(da => da.id == id).status = 2
+                        }
+                    })
+                    .catch(error => {
+                        if (error.response.status === 401) {
+                            this.$store.dispatch('update', {'status': 'error', 'text': 'Session expired.'})
+                            this.$router.push("/login")
+                        }
+                    })
                 this.unpublish = false
             },
             unPublishAll() {
-                for (let i in this.filteredItems) {
-                    let id = this.filteredItems[i].id
-                    this.unpublishAction(id)
-                }
+                this.$axios({
+                    method: 'get',
+                    url: this.$env.apiBaseUrl + '/api/dataassets/all/unpublish',
+                    headers: {
+                        Authorization: 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                })
+                .then(response => {
+                    for (let i in this.filteredItems) {
+                        let id = this.filteredItems[i].id
+                        this.dataassets.find(da => da.id == id).status = 1
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 401) {
+                        this.$store.dispatch('update', {'status': 'error', 'text': 'Session expired.'})
+                        this.$router.push("/login")
+                    }
+                })
                 this.publish = false
             },
 

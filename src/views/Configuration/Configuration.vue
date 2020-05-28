@@ -43,7 +43,7 @@
                             v-model="configuration.curator">
                 </div>
                 <div class="form-group">
-                    <label for="connectorCountry">Select Country</label>
+                    <label for="connectorCountry">Konektorstandort</label>
                     <select id="connectorCountry" name="locality" class="form-control" v-model="geoname" :required="true">
                         <option  class="form-control" v-for="country in countries"
                                   >{{ country.countryName }}</option>

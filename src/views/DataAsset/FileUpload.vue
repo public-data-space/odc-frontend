@@ -13,7 +13,7 @@
                 <div class="col">
                     <form action="" class="file-upload-form" @submit.prevent="uploadFiles" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="datasettitle">Title</label>
+                            <label for="datasettitle" class="licensesLabel" style="line-height: normal">Title</label>
                             <input  type="text"
                                     class="form-control"
                                     id="datasettitle"
@@ -46,7 +46,7 @@
                             </li>
                         </ul>
                         <div class="form-group">
-                            <label for="datasetnotes">Description</label>
+                            <label for="datasetnotes"class="licensesLabel" style="line-height: normal">Description</label>
                             <input type="text"
                                    class="form-control"
                                    id="datasetnotes"
@@ -55,7 +55,20 @@
                                    v-model="description" required >
 
                         </div>
-                        <input class = "btn btn-primary" type="submit" value="Data Asset hinzufügen">
+                        <div >
+                            <label class="licensesLabel">
+                                Lizenz ändern (Default: CC0 1.0)
+                                <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px;">
+                            </label>
+                            <div style=" display:none ;clear: both;" id="divLicenses">
+                                <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseTitle">
+                                    <option  class="form-control" v-for="license in licenses"
+                                    >{{ license.title }}</option>
+                                </select>
+                                (Unter Umständen wird diese Auswahl im Datenquellenadapter geändert, z.B. wenn Lizenzinformationen aus externen Quellen vorliegen.)
+                            </div>
+                        </div>
+                        <input class = "btn btn-primary" type="submit" style="margin-top:20px" value="Data Asset hinzufügen">
                     </form>
                 </div>
 
@@ -66,6 +79,7 @@
 
 <script>
     import Sidebar from '@/components/Sidebar.vue'
+    import licenses from '@/licenses.json'
     export default {
         name: "FileUpload",
         components: {
@@ -73,6 +87,8 @@
         },
         data() {
             return {
+                licenses:licenses,
+                licenseTitle:"CC0 1.0",
                 attachments:[],
                 files: [],
                 sizes:0,
@@ -88,6 +104,17 @@
             this.querySources()
         },
         methods:{
+            showMe (box) {
+                var chboxs = document.getElementsByName("activeLizenz");
+                var vis = "none";
+                for(var i=0;i<chboxs.length;i++) {
+                    if(chboxs[i].checked){
+                        vis = "block";
+                        break;
+                    }
+                }
+                document.getElementById(box).style.display = vis;
+            },
             listUploads(e) {
                 const fileInput = this.$refs['file'];
                 this.showUploads = true;
@@ -164,11 +191,22 @@
                 return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
             },
             uploadFiles() {
+                var licenseurl = ""
+                var licensetitle = ""
+
+                for (let i in this.licenses){
+                    if (this.licenseTitle == this.licenses[i].title){
+                        licenseurl = this.licenses[i].url
+                        licensetitle = this.licenses[i].title
+                    }
+                }
                 let formData = new FormData();
                 let fileCount = this.attachments.length;
                 let rawData = {
                     datasettitle: this.title,
-                    datasetnotes: this.description
+                    datasetnotes: this.description,
+                    licenseurl: licenseurl,
+                    licensetitle: licensetitle,
                 }
                 rawData = JSON.stringify(rawData)
                 for(let i = 0; i < fileCount; i++) {

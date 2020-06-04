@@ -6,7 +6,11 @@ Vue.use(Vuex)
 
 let auth = {
   headers: {
-    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    Authorization:{
+      toString () {
+        return   'Bearer ' + localStorage.getItem('jwt')
+      }
+    }
   }
 }
 

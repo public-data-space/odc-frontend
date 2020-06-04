@@ -12,6 +12,19 @@
                     </div>
                 </div>
             <ncform :form-schema="formSchema" form-name="dataInput" v-model="formSchema.value" style="margin-left: -13px;"></ncform>
+            <div >
+                <label class="licensesLabel">
+                    Lizenz ändern (Default: CC0 1.0)
+                    <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px;">
+                </label>
+                <div style=" display:none ;clear: both;" id="divLicenses">
+                    <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseTitle">
+                        <option  class="form-control" v-for="license in licenses"
+                        >{{ license.title }}</option>
+                    </select>
+                    (Unter Umständen wird diese Auswahl im Datenquellenadapter geändert, z.B. wenn Lizenzinformationen aus externen Quellen vorliegen.)
+                </div>
+            </div>
             <button v-on:click="submit()" class="btn btn-primary" style="margin-top: 20px">Data Asset hinzufügen</button>
         </div>
     </div>
@@ -20,6 +33,8 @@
             
 <script>
 import Sidebar from '@/components/Sidebar.vue'
+import licenses from '@/licenses.json'
+
 export default {
     name:"Create",
     components: {
@@ -28,6 +43,8 @@ export default {
     props:['sourceid'],
     data() {
         return {
+            licenses:licenses,
+            licenseTitle:"CC0 1.0",
             formSchema: {
                 type:"object",
                 properties:{}
@@ -53,6 +70,17 @@ export default {
         }
     },
     methods:{
+        showMe (box) {
+        var chboxs = document.getElementsByName("activeLizenz");
+        var vis = "none";
+        for(var i=0;i<chboxs.length;i++) {
+            if(chboxs[i].checked){
+                vis = "block";
+                break;
+            }
+        }
+        document.getElementById(box).style.display = vis;
+        },
         handleFileUpload(){
             this.file = this.$refs.file.files[0];
         },
@@ -144,13 +172,24 @@ export default {
                 })
         },
         submit(){
+            var licenseurl = ""
+            var licensetitle = ""
+
+            for (let i in this.licenses){
+               if (this.licenseTitle == this.licenses[i].title){
+                   licenseurl = this.licenses[i].url
+                   licensetitle = this.licenses[i].title
+               }
+            }
             this.$axios({
                 method: 'post',
                 url: this.$env.apiBaseUrl+'/api/dataassets/add',
                 data: {
                     sourceId: this.sourceid,
                     data: this.formSchema.value,
-                    datasourcetype: this.type
+                    datasourcetype: this.type,
+                    licenseurl:licenseurl,
+                    licensetitle:licensetitle
                 },
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')

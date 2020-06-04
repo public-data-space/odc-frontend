@@ -58,7 +58,7 @@
                         <div >
                             <label class="licensesLabel">
                                 Lizenz ändern (Default: CC0 1.0)
-                                <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px;">
+                                <input type="checkbox" name="activeLizenz" value="Lizenz" v-on:click="showMe('divLicenses')" style="margin-left: 10px; display:block;">
                             </label>
                             <div style=" display:none ;clear: both;" id="divLicenses">
                                 <select id="licenses" class="licenseSelect" name="licenses" v-model="licenseTitle">

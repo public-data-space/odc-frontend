@@ -6,7 +6,11 @@ Vue.use(Vuex)
 
 let auth = {
   headers: {
-    Authorization: 'Bearer ' + localStorage.getItem('jwt')
+    Authorization:{
+      toString () {
+        return   'Bearer ' + localStorage.getItem('jwt')
+      }
+    }
   }
 }
 
@@ -54,7 +58,7 @@ export default new Vuex.Store({
       }
     },
     loadSources:({ commit }, config) =>{
-      Vue.axios.get(config.configBase+'/listAdapters',auth).then(result => {
+      Vue.axios.get(config.apiBase+'/api/listAdapters',auth).then(result => {
         let adpts = []
         let adapterNames =[]
         for( var i in result.data.sort() ){

@@ -36,7 +36,7 @@ export default {
           updateParams(){
             this.$axios({
                 method: 'get',
-                url: this.$env.configManagerUrl+'/images',
+                url: this.$env.apiBaseUrl+'/api/images',
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -47,14 +47,14 @@ export default {
             .catch(error => {
                 if(error.response.status === 401){
                     this.$store.dispatch('update',{'status':'error','text':'Session expired.'})
-                    this.$router.push("/login")                            
+                    this.$router.push("/login")
                 }
             })
         },
         startAction(uuid){
             this.$axios({
                 method: 'post',
-                url: this.$env.configManagerUrl+'/images/start/',
+                url: this.$env.apiBaseUrl+'/api/images/start',
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
@@ -74,7 +74,7 @@ export default {
         stopAction(uuid){
             this.$axios({
                 method: 'post',
-                url: this.$env.configManagerUrl+'/images/stop/',
+                url: this.$env.apiBaseUrl+'/api/images/stop',
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')

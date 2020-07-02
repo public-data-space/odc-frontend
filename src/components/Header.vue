@@ -27,7 +27,7 @@
                         <router-link to="/job" class="nav-link">Jobs</router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="http://localhost:8090/about/json">Connector</a>
+                        <a class="nav-link" :href="baseUrl+'/about'">Connector</a>
                     </li>
                     <li class="nav-item">
                        <router-link to="/apps" class="nav-link">Apps</router-link>
@@ -54,3 +54,13 @@
         </nav>
     </header>
 </template>
+<script>
+export default {
+  name: 'header',
+  data() {
+        return {
+            'baseUrl':this.$env.apiBaseUrl
+        };
+  }
+}
+</script>

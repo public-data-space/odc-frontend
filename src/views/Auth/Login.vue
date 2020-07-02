@@ -50,7 +50,7 @@ export default {
         login() {
            this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/login',
+                url: new URL('/login', this.$env.apiBaseUrl),
                 data: {
                     username: this.username,
                     password: this.password

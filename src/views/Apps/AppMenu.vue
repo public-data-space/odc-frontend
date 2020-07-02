@@ -36,7 +36,7 @@ export default {
           updateParams(){
             this.$axios({
                 method: 'get',
-                url: this.$env.apiBaseUrl+'/api/images',
+                url: new URL('/api/images', this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -54,7 +54,7 @@ export default {
         startAction(uuid){
             this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/api/images/start',
+                url: new URL('/api/images/start', this.$env.apiBaseUrl),
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
@@ -74,7 +74,7 @@ export default {
         stopAction(uuid){
             this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/api/images/stop',
+                url: new URL('/api/images/stop', this.$env.apiBaseUrl),
                 data: uuid,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')

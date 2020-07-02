@@ -54,7 +54,7 @@
                     findAll () {
                         this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/jobs/find/all',
+                            url: new URL('/api/jobs/find/all', this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }
@@ -72,7 +72,7 @@
                     deleteAction (){
                         this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/jobs/delete/all',
+                            url: new URL('/api/jobs/delete/all', this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

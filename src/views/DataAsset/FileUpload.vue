@@ -136,7 +136,7 @@
             querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/listAdapters',
+                    url: new URL('/api/listAdapters', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -147,7 +147,7 @@
                             var adapter = response.data[i]
                             this.$axios({
                                 method: 'get',
-                                url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
+                                url: new URL('/api/datasources/find/type/'+adapter.name, this.$env.apiBaseUrl),
                                 headers: {
                                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                                 }
@@ -215,7 +215,7 @@
                 formData.append("data",rawData)
                 this.$axios({
                     method: 'post',
-                    url: this.$env.apiBaseUrl+'/api/upload/file',
+                    url: new URL('/api/upload/file', this.$env.apiBaseUrl),
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data ; application/json',

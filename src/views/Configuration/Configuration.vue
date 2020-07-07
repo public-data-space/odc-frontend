@@ -107,7 +107,7 @@ export default {
                     geonameId = this.countries[i].geonameId
                 }
             }
-            let gemapptesLand = "https://www.geonames.org/"+geonameId
+            let gemapptesLand = "https://sws.geonames.org/"+geonameId
             this.configuration.country = gemapptesLand
             this.$axios({
                 method: 'post',

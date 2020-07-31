@@ -329,7 +329,7 @@
             setData() {
                 this.$axios({
                     method: 'get',
-                    url: new URL('/api/dataassets/', this.$env.apiBaseUrl),
+                    url: new URL('/api/dataassets', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

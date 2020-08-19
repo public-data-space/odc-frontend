@@ -105,7 +105,7 @@ export default {
             this.type = this.typeAdapter
               this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/datasources/schema/type/'+this.typeAdapter,
+                    url: new URL('/api/datasources/schema/type/'+this.typeAdapter, this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -126,7 +126,7 @@ export default {
                 this.id = this.sourceid
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/datasources/find/id/'+this.id,
+                    url: new URL('/api/datasources/find/id/'+this.id, this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -149,16 +149,16 @@ export default {
             }
         },
         submit(){
-            let urlString;
+            let url;
             if(this.id === null){
-                urlString = this.$env.apiBaseUrl+'/api/datasources/add'
+                url = new URL('/api/datasources/add', this.$env.apiBaseUrl)
             }
             else{
-                urlString = this.$env.apiBaseUrl+'/api/datasources/edit/'+this.id
+                url = new URL('/api/datasources/edit/'+this.id, this.$env.apiBaseUrl)
             }
             this.$axios({
                 method: 'post',
-                url: urlString,
+                url: url,
                 data: {
                     datasourcetype: this.type,
                     datasourcename: this.name,
@@ -182,7 +182,7 @@ export default {
         deleteAction(id){
          this.$axios({
                 method: 'get',
-                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
+                url: new URL('/api/datasources/delete/'+id, this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -201,7 +201,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/listAdapters',
+                    url: new URL('/api/listAdapters', this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -212,7 +212,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
+                            url: new URL('/api/datasources/find/type/'+adapter.name, this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

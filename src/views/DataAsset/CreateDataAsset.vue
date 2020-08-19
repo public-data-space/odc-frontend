@@ -89,7 +89,7 @@ export default {
                 this.id = this.sourceid
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/datasources/find/id/'+this.id,
+                    url: new URL('/api/datasources/find/id/'+this.id, this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -114,7 +114,7 @@ export default {
         deleteAction(id){
          this.$axios({
                 method: 'get',
-                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
+                url: new URL('/api/datasources/delete/'+id, this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -134,7 +134,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/listAdapters',
+                    url: new URL('/api/listAdapters', this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -145,7 +145,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
+                            url: new URL('/api/datasources/find/type/'+adapter.name, this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }
@@ -183,7 +183,7 @@ export default {
             }
             this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/api/dataassets/add',
+                url: new URL('/api/dataassets/add', this.$env.apiBaseUrl),
                 data: {
                     sourceId: this.sourceid,
                     data: this.formSchema.value,
@@ -211,7 +211,7 @@ export default {
             formData.append('file', this.file)
             this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/api/dataassets/add',
+                url: new URL('/api/dataassets/add', this.$env.apiBaseUrl),
                 data: formData,
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt'),
@@ -231,7 +231,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/listAdapters',
+                    url: new URL('/api/listAdapters', this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -242,7 +242,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
+                            url: new URL('/api/datasources/find/type/'+adapter.name, this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

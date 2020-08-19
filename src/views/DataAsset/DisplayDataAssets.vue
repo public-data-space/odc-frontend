@@ -329,7 +329,7 @@
             setData() {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/',
+                    url: new URL('/api/dataassets', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -360,7 +360,7 @@
             publishAll() {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/all/publish',
+                    url: new URL('/api/dataassets/all/publish', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -382,7 +382,7 @@
             unPublishAll() {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/all/unpublish',
+                    url: new URL('/api/dataassets/all/unpublish', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -405,7 +405,7 @@
             publishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/publish',
+                    url: new URL('/api/dataassets/' + id + '/publish', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -423,7 +423,7 @@
             unpublishAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/unpublish',
+                    url: new URL('/api/dataassets/' + id + '/unpublish', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -441,7 +441,7 @@
             deleteAction(id) {
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl + '/api/dataassets/' + id + '/delete',
+                    url: new URL('/api/dataassets/' + id + '/delete', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

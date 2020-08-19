@@ -75,7 +75,7 @@ export default {
         submit(){
                 this.$axios({
                     method: 'post',
-                    url: this.$env.apiBaseUrl+'/api/broker/add',
+                    url: new URL('/api/broker/add', this.$env.apiBaseUrl),
                     data: {
                         url: this.url
                     },
@@ -95,17 +95,17 @@ export default {
                 })  
         },
         toggleBroker(id, status){
-            var urlString;
+            var url;
             if(status === 'REGISTERED'){
-                urlString = this.$env.apiBaseUrl+'/api/broker/unregister/'+id
+                url = new URL('/api/broker/unregister/'+id, this.$env.apiBaseUrl)
             }
             else{
-                 urlString = this.$env.apiBaseUrl+'/api/broker/register/'+id
+                url = new URL('/api/broker/register/'+id, this.$env.apiBaseUrl)
             }
 
              this.$axios({
                     method: 'get',
-                    url: urlString,
+                    url: url,
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -125,7 +125,7 @@ export default {
         findBroker(){
             this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/broker/findAll',
+                    url: new URL('/api/broker/findAll', this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -143,7 +143,7 @@ export default {
         deleteBroker(id){
             this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/broker/delete/'+id,
+                    url: new URL('/api/broker/delete/'+id, this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }

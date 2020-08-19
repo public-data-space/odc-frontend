@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Recreate config file
 rm -rf ./env-config.js
 touch ./env-config.js
@@ -12,7 +12,7 @@ vars=$(join_by ',' $vars)
 echo "Found variables $vars"
 
 #echo " VUE_APP_BACKEND_BASE_URL: '${VUE_APP_BACKEND_BASE_URL}' , VUE_APP_CONFIG_MANAGER_BASE_URL:${VUE_APP_CONFIG_MANAGER_BASE_URL} " >> .env
-for file in /app/js/app.*.js;
+for file in /usr/share/nginx/html/js/app.*.js;
 do
   echo "Processing $file ...";
 

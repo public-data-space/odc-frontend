@@ -1,10 +1,11 @@
-FROM nginx
-RUN mkdir /app
-ADD dist /app
-COPY nginx.conf /etc/nginx/nginx.conf
+FROM nginx:alpine
+
+EXPOSE 8080
+ADD dist /usr/share/nginx/html/
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY runtimeconfig.sh /
+
 RUN chmod +x /runtimeconfig.sh
 
 CMD [ "/runtimeconfig.sh" ]
-EXPOSE 8080

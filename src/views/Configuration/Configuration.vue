@@ -82,7 +82,7 @@ export default {
         getConfig(){
             this.$axios({
             method: 'get',
-            url: this.$env.apiBaseUrl+'/api/configuration/get',
+            url: new URL('/api/configuration/get', this.$env.apiBaseUrl),
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
             }
@@ -107,11 +107,11 @@ export default {
                     geonameId = this.countries[i].geonameId
                 }
             }
-            let gemapptesLand = "https://www.geonames.org/"+geonameId
+            let gemapptesLand = "https://sws.geonames.org/"+geonameId
             this.configuration.country = gemapptesLand
             this.$axios({
                 method: 'post',
-                url: this.$env.apiBaseUrl+'/api/configuration/edit',
+                url: new URL('/api/configuration/edit', this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 },

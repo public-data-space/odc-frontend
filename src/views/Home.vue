@@ -76,7 +76,7 @@ export default {
     getDataAssetCounts(){
         this.$axios({
             method: 'get',
-            url: this.$env.apiBaseUrl+'/api/dataassets/counts',
+            url: new URL('/api/dataassets/counts', this.$env.apiBaseUrl),
             headers: {
                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
             }

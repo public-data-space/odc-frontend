@@ -42,7 +42,7 @@ export default {
             this.sources = []
          this.$axios({
                 method: 'get',
-                url: this.$env.apiBaseUrl+'/api/datasources/delete/'+id,
+                url: new URL('/api/datasources/delete/'+id, this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')
                 }
@@ -63,7 +63,7 @@ export default {
         querySources(){
                 this.$axios({
                     method: 'get',
-                    url: this.$env.apiBaseUrl+'/api/listAdapters',
+                    url: new URL('/api/listAdapters', this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')
                     }
@@ -73,7 +73,7 @@ export default {
                         var adapter = response.data[i]
                          this.$axios({
                             method: 'get',
-                            url: this.$env.apiBaseUrl+'/api/datasources/find/type/'+adapter.name,
+                            url: new URL('/api/datasources/find/type/'+adapter.name, this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
                             }

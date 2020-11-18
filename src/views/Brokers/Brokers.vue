@@ -142,7 +142,7 @@ export default {
         },
         deleteBroker(id){
             this.$axios({
-                    method: 'get',
+                    method: 'delete',
                     url: new URL('/api/broker/delete/'+id, this.$env.apiBaseUrl),
                     headers: {
                          Authorization: 'Bearer ' + localStorage.getItem('jwt')

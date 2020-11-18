@@ -113,7 +113,7 @@ export default {
         },
         deleteAction(id){
          this.$axios({
-                method: 'get',
+                method: 'delete',
                 url: new URL('/api/datasources/delete/'+id, this.$env.apiBaseUrl),
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('jwt')

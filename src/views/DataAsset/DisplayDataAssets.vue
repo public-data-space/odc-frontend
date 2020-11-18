@@ -434,7 +434,7 @@
             },
             deleteAction(id) {
                 this.$axios({
-                    method: 'get',
+                    method: 'delete',
                     url: new URL('/api/dataassets/' + id + '/delete', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')

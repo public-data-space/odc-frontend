@@ -62,11 +62,11 @@
                     <tr v-else v-for="item in items" >
                         <td @click="rowClick(item)">
                             <p :id="'truncateTitle-'+item.id" class="truncateText" style="-webkit-line-clamp: 2;">
-                                {{item.datasettitle}}
+                                {{item.title}}
                             </p>
                         </td>
                         <td @click="rowClick(item)"><p :id="'truncateNote-'+item.id" class="truncateText" style="-webkit-line-clamp: 2;">
-                            {{item.datasetnotes}}
+                            {{item.description}}
                         </p></td>
                         <td><p>
                             {{getDatasource(item.sourceid).datasourcetype}}
@@ -76,12 +76,12 @@
                         </p></td>
                         <td>
                             <div style="display: flex">
-                               <span v-if="item.status == 1">
+                               <span v-if="item.status === 'APPROVED'">
                                   <button v-on:click="publishAction(item.id)">
                                       <span title="Veröffentlichen" style="color: #5d5d5d" aria-hidden="true"
                                             class="v-icon  material-icons ">publish</span></button>
                             </span>
-                                <span v-if="item.status == 2">
+                                <span v-if="item.status === 'PUBLISHED'">
                                  <button v-on:click="unpublishAction(item.id)">
                                  <span title="Zurückhalten" style="color: #00bc8c;text-shadow: 0 0 5px #919191;"
                                        aria-hidden="true" class="v-icon  material-icons ">publish</span></button>
@@ -93,12 +93,6 @@
                                   aria-hidden="true"
                                   class="v-icon material-icons t">delete</span>
                                 </button>
-
-                                <a :href="'http://localhost:8090/data/'+item.id">
-                                <span title="Download"
-                                      style="color: #3498DB;text-shadow: 0 0 2px white;"
-                                      aria-hidden="true"
-                                      class="v-icon material-icons t">system_update_alt</span></a>
                             </div>
                         </td>
                     </tr>
@@ -122,14 +116,14 @@
         <span v-for="dataAsset in dataassets" v-bind:key="dataAsset.id">
                     <div class="card">
                         <div class="card-header">
-                            <h4>{{dataAsset.datasettitle}}</h4>
+                            <h4>{{dataAsset.title}}</h4>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title"></h5>
                             <p class="card-text">
                                 <h5>Beschreibung</h5>
                                 <p>
-                                    {{dataAsset.datasetnotes}}
+                                    {{dataAsset.description}}
                                 </p>
                                 <h5>Resourcen</h5>
                                 <p>
@@ -145,10 +139,10 @@
                    </p>
            </div>
            <div class="card-footer text-muted">
-               <span v-if="dataAsset.status == 1">
+               <span v-if="dataAsset.status === 'APPROVED'">
                      <button v-on:click="publishAction(dataAsset.id)" class="btn btn-success">Veröffentlichen</button>
                </span>
-               <span v-if="dataAsset.status == 2">
+               <span v-if="dataAsset.status === 'PUBLISHED'">
                     <button v-on:click="unpublishAction(dataAsset.id)" class="btn btn-primary">Zurückhalten</button>
                </span>
                 <button v-on:click="deleteAction(dataAsset.id)" class="btn btn-danger">Löschen</button>
@@ -180,12 +174,12 @@
                     {
                         text: 'Title',
                         dataType:'button',
-                        value: 'datasettitle',
+                        value: 'title',
                         align: 'center',
                         sortable: false,
                         class: "text-datasource"
                     },
-                    {text: 'Beschreibung', align: 'center', value: 'datasetnotes'},
+                    {text: 'Beschreibung', align: 'center', value: 'description'},
                     {text: 'Datasource Type', align: 'center', value: 'datasourcetype', class: "text-datasource"},
                     {text: 'Datasource Name', align: 'center', value: 'datasourcename', class: "text-datasource"},
                     {text: 'Actions', align: 'center', value: 'status', sortable: false, class: "text-action"}
@@ -251,7 +245,7 @@
                         this.unpublish = false;
                         this.disableUnpublish = true
                         let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
-                            return (row.status === 2);
+                            return (row.status === "PUBLISHED");
                         })
                         let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
                             return !this.datasourceName || (row.datasourcename === this.datasourceName);
@@ -267,7 +261,7 @@
                         this.publish = false;
                         this.disablePublish = true
                         let filteredItemsByAdapterStatus = this.mungedDatasets.filter((row) => {
-                            return (row.status === 1);
+                            return (row.status === "APPROVED");
                         })
                         let filteredItemsByAdapterNames2 = filteredItemsByAdapterStatus.filter((row) => {
                             return !this.datasourceName || (row.datasourcename === this.datasourceName);
@@ -316,8 +310,8 @@
                 }
             },
             filter(value, search, item) {
-                let adapterDatasetnotes = RegExp(search, 'i').test(item.datasetnotes)
-                let adapterDatasettitle = RegExp(search, 'i').test(item.datasettitle)
+                let adapterDatasetnotes = RegExp(search, 'i').test(item.description)
+                let adapterDatasettitle = RegExp(search, 'i').test(item.title)
                 let adapterStatus = RegExp(search, 'i').test(item.status)
                 let adapterType = RegExp(search, 'i').test(this.getDatasource(item.sourceid).datasourcetype)
                 let adapterName = RegExp(search, 'i').test(this.getDatasource(item.sourceid).datasourcename)
@@ -368,7 +362,7 @@
                     .then(response => {
                         for (let i in this.filteredItems) {
                             let id = this.filteredItems[i].id
-                            this.dataassets.find(da => da.id == id).status = 2
+                            this.dataassets.find(da => da.id == id).status = "PUBLISHED"
                         }
                     })
                     .catch(error => {
@@ -390,7 +384,7 @@
                 .then(response => {
                     for (let i in this.filteredItems) {
                         let id = this.filteredItems[i].id
-                        this.dataassets.find(da => da.id == id).status = 1
+                        this.dataassets.find(da => da.id == id).status = "APPROVED"
                     }
                 })
                 .catch(error => {
@@ -411,7 +405,7 @@
                     }
                 })
                     .then(response => {
-                        this.dataassets.find(da => da.id == id).status = 2
+                        this.dataassets.find(da => da.id == id).status = "PUBLISHED"
                     })
                     .catch(error => {
                         if (error.response.status === 401) {
@@ -429,7 +423,7 @@
                     }
                 })
                     .then(response => {
-                        this.dataassets.find(da => da.id == id).status = 1
+                        this.dataassets.find(da => da.id == id).status = "APPROVED"
                     })
                     .catch(error => {
                         if (error.response.status === 401) {
@@ -440,7 +434,7 @@
             },
             deleteAction(id) {
                 this.$axios({
-                    method: 'get',
+                    method: 'delete',
                     url: new URL('/api/dataassets/' + id + '/delete', this.$env.apiBaseUrl),
                     headers: {
                         Authorization: 'Bearer ' + localStorage.getItem('jwt')

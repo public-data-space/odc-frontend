@@ -71,7 +71,7 @@
                     },
                     deleteAction (){
                         this.$axios({
-                            method: 'get',
+                            method: 'delete',
                             url: new URL('/api/jobs/delete/all', this.$env.apiBaseUrl),
                             headers: {
                                 Authorization: 'Bearer ' + localStorage.getItem('jwt')
